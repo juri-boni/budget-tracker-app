@@ -11,7 +11,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^4.21.2"
+    "db-migrate-pg": "^1.5.2",
+    "express": "^4.21.2",
+    "pg": "^8.13.3",
+    "sequelize": "^6.37.5"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
