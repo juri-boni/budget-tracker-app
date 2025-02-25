@@ -1,0 +1,41 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database files
+*.sqlite
+*.sqlite-journal
+pgdata/
+
+# Build files
+dist/
+build/
+
+# Editor/OS specific files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# React Native specific
+android/.gradle/
+android/app/build/
+ios/Pods/
+ios/build/
+*.xcworkspace
