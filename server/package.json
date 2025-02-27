@@ -12,6 +12,7 @@
   "description": "",
   "dependencies": {
     "db-migrate-pg": "^1.5.2",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "pg": "^8.13.3",
     "sequelize": "^6.37.5"
