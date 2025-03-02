@@ -89,7 +89,7 @@ async function getCategoryById(id: number): Promise<object | null> {
     }
 }
 
-async function addNewCategory(request: { name: string, user_id: number }): Promise<object | null>{
+async function addNewCategory(request: Category): Promise<object | null>{
     const { name, user_id } = request;
 
     try {
