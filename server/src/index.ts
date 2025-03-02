@@ -1,14 +1,14 @@
-import express, { NextFunction, Request, Response } from "express";
+require('dotenv').config(); //va importato all'inizio
+import express from 'express';
+import api from './routes/api';
+import './models/associations';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
+// Parse any incoming JSON
 app.use(express.json());
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Server is running!");
-});
+// Versioning delle APIs
+app.use('/v1', api);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+export default app;
