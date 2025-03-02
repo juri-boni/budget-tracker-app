@@ -34,7 +34,6 @@ Category.init(
     {
       sequelize,
       tableName: 'categories',  // The name of the table in the database
-      timestamps: false,   // If you don't have createdAt or updatedAt fields
       paranoid: true, // paranoid tables perform a soft-deletion of records, instead of a hard-deletion.
     }
 );
