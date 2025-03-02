@@ -38,32 +38,58 @@ Category.init(
     }
 );
 
-async function getAllCategories(): Promise<Category[]> {
+async function getAllCategories(): Promise<object> {
     try {
         // Query the database
         const results = await Category.findAll();
         // Return the results
-        return results;
-    } catch (error) {
-        console.error(error);
-        throw new Error('Error querying the database: TABLE Categories');
+        const res: object = {
+            success: true,
+            results: results
+        }
+        return res;
+    } catch (error: unknown) {
+        // throw new Error('Error querying the database: TABLE Categories');
+        if (error instanceof Error) {
+            const res: object = {
+                success: false,
+                message: 'Error querying the database: TABLE Categories',
+                error: error.message
+            }
+
+            return res;
+        }
+
+        return {error}
     }
 }
 
-async function getCategoryById(id: number): Promise<Category | false> {
+async function getCategoryById(id: number): Promise<object | null> {
     try {
         // Query the database
         const results = await Category.findByPk(id);
-        if(!results) return false;
+        const res: object = {
+            success: true,
+            results: results ? results : null
+        }
         // Return the results
-        return results;
+        return res;
     } catch (error) {
-        console.error(error);
-        throw new Error(`Error querying the Category ID: ${id}`);
+        if (error instanceof Error) {
+            const res: object = {
+                success: false,
+                message: `Error querying the Category ID: ${id}`,
+                error: error.message
+            }
+
+            return res;
+        }
+
+        return {error}
     }
 }
 
-async function addNewCategory(request: { name: string, user_id: number }): Promise<Category | null>{
+async function addNewCategory(request: { name: string, user_id: number }): Promise<object | null>{
     const { name, user_id } = request;
 
     try {
@@ -72,14 +98,68 @@ async function addNewCategory(request: { name: string, user_id: number }): Promi
             user_id
         });
 
-        return newCategory;
+        const res: object = {
+            success: true,
+            results: newCategory
+        }
+        // Return the results
+        return res;
     } catch (error) {
-        console.error(error);
-        throw new Error(`Error creating the Category`);
+        if (error instanceof Error) {
+            const res: object = {
+                success: false,
+                message: `Error creating the Category`,
+                error: error.message
+            }
+
+            return res;
+        }
+
+        return {error}
+    }
+}
+
+async function deleteCategory(id: number): Promise< object | undefined >{
+    try {
+        const category = await Category.findByPk(id);
+
+        if(!category){
+            const res: object = {
+                success: false,
+                message: `The Category with ID: ${id} doesn't exists`
+            }
+            return res;
+        }
+
+        const deletedCategory = await Category.destroy({
+            where: {
+                id: id
+            }
+        })
+
+        const res: object = {
+            success: true,
+            results: await Category.findByPk(id, {
+                paranoid: false
+            })
+        }
+        return res;        
+    } catch (error) {
+        if (error instanceof Error) {
+            const res: object = {
+                success: false,
+                message: `Error deleting the Category with ID: ${id}`,
+                error: error.message
+            }
+
+            return res;
+        }
+
+        return {error}
     }
 }
 
 // Exporting the function as a named export
 export default Category;
-export { getAllCategories, getCategoryById, addNewCategory };
+export { getAllCategories, getCategoryById, addNewCategory, deleteCategory };
   

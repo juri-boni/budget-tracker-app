@@ -43,12 +43,12 @@ async function getAllUsers(): Promise<User[]> {
     try {
         // Query the database
         const results = await User.findAll({
-            // include:[
-            //     {
-            //         model: Category,
-            //         required: false
-            //     }
-            // ]
+            include:[
+                {
+                    model: Category,
+                    required: false
+                }
+            ]
         });
         // Return the results
         return results;
