@@ -1,7 +1,7 @@
 import { Model, InferAttributes, InferCreationAttributes, DataTypes, ForeignKey, CreationOptional } from 'sequelize';
 import sequelize from "../config/dbConfig";
-import { User } from "./User.model";
-import { Category } from "./Category.model";
+import User from "./User.model";
+import Category from "./Category.model";
 
 
 // Define the Budget model class
@@ -47,31 +47,10 @@ Budget.init(
       sequelize,
       tableName: 'budgets',  // The name of the table in the database
       timestamps: false,   // If you don't have createdAt or updatedAt fields
+      paranoid: true, // paranoid tables perform a soft-deletion of records, instead of a hard-deletion.
     }
 );
 
-// Setting up the associations
-User.hasMany(Budget, {
-    foreignKey: 'user_id', // The foreign key in the Budget model
-    sourceKey: 'id', // The key in the User model being referenced
-});
-
-Budget.belongsTo(User, {
-    foreignKey: 'user_id', // The foreign key in the Budget model
-    targetKey: 'id', // The key in the User model being referenced
-});
-
-// Setting up the associations
-Category.hasMany(Budget, {
-    foreignKey: 'category_id', // The foreign key in the Budget model
-    sourceKey: 'id', // The key in the User model being referenced
-});
-
-Budget.belongsTo(Category, {
-    foreignKey: 'category_id', // The foreign key in the Budget model
-    targetKey: 'id', // The key in the User model being referenced
-});
-
 // Exporting the function as a named export
-export { Budget };
+export default Budget;
   
