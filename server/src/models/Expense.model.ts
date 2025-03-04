@@ -12,6 +12,7 @@ class Expense extends Model<InferAttributes<Expense>, InferCreationAttributes<Ex
     declare description: CreationOptional<string>;
     declare user_id: ForeignKey<User['id']>;
     declare category_id: ForeignKey<Category['id']>;
+    declare deletedAt: Date | null;
 }
 
 // Initialize the Expense model
@@ -41,6 +42,10 @@ Expense.init(
         category_id: {
             type: new DataTypes.INTEGER,
             allowNull: false,
+        },
+        deletedAt: {
+            type: new DataTypes.DATE,
+            allowNull: true,
         }
     },
     {
@@ -50,6 +55,129 @@ Expense.init(
     }
 );
 
+async function getAllExpenses(): Promise<object> {
+    try {
+        // Query the database
+        const results = await Expense.findAll();
+
+        // Return the results
+        const res: object = {
+            success: true,
+            results: results
+        }
+        return res;
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            const res: object = {
+                success: false,
+                message: 'Error querying the database: TABLE Expenses',
+                error: error.message
+            }
+            return res;
+        }
+
+        return {error}
+    }
+}
+
+async function getExpenseById(id: number): Promise<object | null> {
+    try {
+        // Query the database
+        const results = await Expense.findByPk(id);
+        const res: object = {
+            success: true,
+            results: results ? results : null
+        }
+        // Return the results
+        return res;
+    } catch (error) {
+        if (error instanceof Error) {
+            const res: object = {
+                success: false,
+                message: `Error querying the Expense with ID: ${id}`,
+                error: error.message
+            }
+
+            return res;
+        }
+
+        return {error}
+    }
+}
+
+async function addNewExpense(request: Expense): Promise<object | null>{
+    const { amount, date, description, user_id, category_id } = request;
+
+    try {
+        const newExpense = await Expense.create({
+            amount,
+            date,
+            description,
+            user_id,
+            category_id
+        });
+
+        const res: object = {
+            success: true,
+            results: newExpense
+        }
+        // Return the results
+        return res;
+    } catch (error) {
+        if (error instanceof Error) {
+            const res: object = {
+                success: false,
+                message: `Error creating the Expense`,
+                error: error.message
+            }
+
+            return res;
+        }
+
+        return {error}
+    }
+}
+
+async function deleteExpense(id: number): Promise< object | undefined >{
+    try {
+        const expense = await Expense.findByPk(id);
+
+        if(!expense){
+            const res: object = {
+                success: false,
+                message: `The Expense with ID: ${id} doesn't exists`
+            }
+            return res;
+        }
+
+        if(expense){
+            await expense.destroy();
+        }
+
+
+        const res: object = {
+            success: true,
+            results: await Expense.findByPk(id, {
+                paranoid: false
+            })
+        }
+        return res;        
+    } catch (error) {
+        if (error instanceof Error) {
+            const res: object = {
+                success: false,
+                message: `Error deleting the Expense with ID: ${id}`,
+                error: error.message
+            }
+
+            return res;
+        }
+
+        return {error}
+    }
+}
+
 // Exporting the function as a named export
 export default Expense;
+export { getAllExpenses, getExpenseById, addNewExpense, deleteExpense };
   
