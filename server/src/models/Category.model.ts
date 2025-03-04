@@ -1,6 +1,8 @@
 import { Model, InferAttributes, InferCreationAttributes, DataTypes, ForeignKey, CreationOptional } from 'sequelize';
 import sequelize from "../config/dbConfig";
 import User from "./User.model";
+import Budget from "./Budget.model";
+import Expense from "./Expense.model";
 
 
 // Define the Category model class
@@ -8,6 +10,7 @@ class Category extends Model<InferAttributes<Category>, InferCreationAttributes<
     declare id: CreationOptional<number>;
     declare name: string;
     declare user_id: ForeignKey<User['id']>;
+    declare deletedAt: Date | null;
 }
 
 // Initialize the Category model
@@ -29,7 +32,11 @@ Category.init(
                 model: User, // Make sure this references the User model
                 key: 'id',
             },
-        }
+        },
+        deletedAt: {
+            type: new DataTypes.DATE,
+            allowNull: true,
+        },
     },
     {
       sequelize,
@@ -38,10 +45,53 @@ Category.init(
     }
 );
 
+Category.addHook(
+    'beforeDestroy', async (category: Category) => {
+        try {
+            // Soft delete all related budgets when the category is soft-deleted
+            await Budget.update(
+                { deletedAt: new Date() },  // Set the deletedAt timestamp to trigger the soft delete
+                {
+                    where: {
+                        category_id: category.id,
+                        deletedAt: null  // Only update budgets that are not already soft-deleted
+                    }
+                }
+            );
+            // Soft delete all related expenses when the category is soft-deleted
+            await Expense.update(
+                { deletedAt: new Date() },  // Set the deletedAt timestamp to trigger the soft delete
+                {
+                    where: {
+                        category_id: category.id,
+                        deletedAt: null  // Only update expenses that are not already soft-deleted
+                    }
+                }
+            );
+        } catch (error) {
+            console.error('Error during beforeDestroy hook for Category:', error);
+            throw error;  // Propagate the error to ensure the destroy action fails if necessary
+        }
+        
+    },
+)
+
 async function getAllCategories(): Promise<object> {
     try {
         // Query the database
-        const results = await Category.findAll();
+        const results = await Category.findAll({
+            include:[
+                {
+                    model: Budget,
+                    required: false
+                },
+                {
+                    model: Expense,
+                    required: false
+                }
+            ]
+        });
+
         // Return the results
         const res: object = {
             success: true,
@@ -131,11 +181,10 @@ async function deleteCategory(id: number): Promise< object | undefined >{
             return res;
         }
 
-        const deletedCategory = await Category.destroy({
-            where: {
-                id: id
-            }
-        })
+        if(category){
+            await category.destroy();
+        }
+
 
         const res: object = {
             success: true,
