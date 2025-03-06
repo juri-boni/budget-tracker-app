@@ -23,7 +23,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
   return (
     <View style={styles.table}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={styles.row}>
         <Text style={styles.cell}>Category</Text>
         <Text style={styles.cell}>Budget</Text>
         <Text style={styles.cell}>Spent</Text>
@@ -54,21 +54,43 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({
 
 const styles = StyleSheet.create({
   table: {
+    flex: 1,
     marginTop: 16,
+    padding: 15,
+    marginHorizontal: 10, // adds margin on the sides of the table
   },
-  header: {
+  row: {
     flexDirection: "row",
-    paddingVertical: 8,
-    backgroundColor: "#f0f0f0",
-  },
-  footer: {
-    flexDirection: "row",
-    paddingVertical: 8,
-    backgroundColor: "#e0e0e0",
-    fontWeight: "bold",
+    justifyContent: "space-around",
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
   },
   cell: {
     flex: 1,
     textAlign: "center",
+    fontWeight: "bold",
   },
+  // header: {
+  //   flexDirection: "row",
+  //   paddingVertical: 10,
+  //   backgroundColor: "#f0f0f0",
+  //   borderBottomWidth: 1,
+  //   borderBottomColor: "#ccc",
+  // },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingVertical: 10,
+    backgroundColor: "#f2f2f2",
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
+  },
+  // cell: {
+  //   flex: 1,
+  //   textAlign: "center",
+  //   paddingHorizontal: 12, // adds space between each column
+  // },
 });
+
+export default BudgetTable;

@@ -28,12 +28,15 @@ export const TableRow: React.FC<TableRowProps> = ({
 const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomColor: "#eee",
   },
   cell: {
     flex: 1,
     textAlign: "center",
+    paddingHorizontal: 12,
   },
 });
+
+export default TableRow;
