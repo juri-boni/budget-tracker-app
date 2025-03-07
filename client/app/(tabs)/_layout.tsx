@@ -9,6 +9,7 @@ import Categories from "./categories";
 import Dashboard from "./dashboard";
 import Home from "./home";
 import Menu from "./menu";
+import Expenses from "./expenses";
 
 const Tab = createBottomTabNavigator();
 
@@ -51,6 +52,15 @@ export default function TabsLayout() {
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="category" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="expenses"
+        component={Expenses}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="payments" size={size} color={color} />
           ),
         }}
       />

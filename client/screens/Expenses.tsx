@@ -1,11 +1,11 @@
-// app/ExpenseForm.tsx
+// app/Expenses.tsx
 import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 
-export const ExpenseForm = () => {
+export const Expenses = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>ExpenseForm Screen</Text>
+      <Text style={styles.text}>Expenses Screen</Text>
     </View>
   );
 };

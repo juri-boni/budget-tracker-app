@@ -1,8 +1,10 @@
 // app/dashboard.tsx
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 // import { BudgetTable } from "@/components/Dahsboard/BudgetTable";
 import { BudgetTable } from "../components/Dahsboard/BudgetTable";
+import DateSelectors from "@/components/Dahsboard/DateSelectors";
+import AddButtons from "@/components/Dahsboard/AddButtons";
 
 export const Dashboard = () => {
   // Dummy data for testing
@@ -30,8 +32,11 @@ export const Dashboard = () => {
   return (
     <View style={styles.container}>
       {/* <Text style={styles.text}>Dashboard Screen</Text> */}
-
-      <BudgetTable categories={dummyCategories} total={dummyTotal} />
+      <DateSelectors></DateSelectors>
+      <AddButtons></AddButtons>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <BudgetTable categories={dummyCategories} total={dummyTotal} />
+      </ScrollView>
     </View>
   );
 };
@@ -42,6 +47,9 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     // justifyContent: "center",
     backgroundColor: "#fff",
+  },
+  scrollContainer: {
+    paddingBottom: 16,
   },
   // text: {
   //   fontSize: 18,
