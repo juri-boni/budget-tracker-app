@@ -2,24 +2,28 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { useMonthStore } from "@/store/useMonthStore";
+import { useYearStore } from "@/store/useYearStore";
 
 const DateSelectors = () => {
+  const { selectedMonth, setSelectedMonth } = useMonthStore();
   const currentYear = new Date().getFullYear();
   const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-    "Whole Year",
+    { code: "00", name: "Whole Year" },
+    { code: "01", name: "January" },
+    { code: "02", name: "February" },
+    { code: "03", name: "March" },
+    { code: "04", name: "April" },
+    { code: "05", name: "May" },
+    { code: "06", name: "June" },
+    { code: "07", name: "July" },
+    { code: "08", name: "August" },
+    { code: "09", name: "September" },
+    { code: "10", name: "October" },
+    { code: "11", name: "November" },
+    { code: "12", name: "December" },
   ];
+
   const years = [
     currentYear,
     currentYear + 1,
@@ -27,40 +31,46 @@ const DateSelectors = () => {
     currentYear + 3,
   ];
 
-  // Temporary state; later, connect these to Zustand
-  const [selectedMonth, setSelectedMonth] = useState("1");
-  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
+  const { selectedYear, setSelectedYear } = useYearStore();
+  console.log(selectedYear);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Month:</Text>
-      <Picker
-        selectedValue={selectedMonth}
-        onValueChange={(itemValue) => setSelectedMonth(itemValue)}
-        style={styles.picker}
-      >
-        {months.map((month, index) => (
-          <Picker.Item
-            key={index}
-            label={month}
-            value={(index + 1).toString()}
-          />
-        ))}
-      </Picker>
-      <Text style={styles.label}>Year:</Text>
-      <Picker
-        selectedValue={selectedYear}
-        onValueChange={(itemValue) => setSelectedYear(itemValue)}
-        style={styles.picker}
-      >
-        {years.map((year, index) => (
-          <Picker.Item
-            key={index}
-            label={year.toString()}
-            value={year.toString()}
-          />
-        ))}
-      </Picker>
+      <View style={styles.row}>
+        <View style={styles.column}>
+          <Text style={styles.label}>Month:</Text>
+          <Picker
+            selectedValue={selectedMonth}
+            onValueChange={(value) => setSelectedMonth(value)}
+            style={styles.picker}
+          >
+            {months.map((month) => (
+              <Picker.Item
+                key={month.code}
+                label={month.name}
+                value={month.code}
+              />
+            ))}
+          </Picker>
+        </View>
+
+        <View style={styles.column}>
+          <Text style={styles.label}>Year:</Text>
+          <Picker
+            selectedValue={selectedYear}
+            onValueChange={(itemValue) => setSelectedYear(itemValue)}
+            style={styles.picker}
+          >
+            {years.map((year, index) => (
+              <Picker.Item
+                key={index}
+                label={year.toString()}
+                value={year.toString()}
+              />
+            ))}
+          </Picker>
+        </View>
+      </View>
     </View>
   );
 };
@@ -71,13 +81,21 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 16,
   },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  column: {
+    flex: 1,
+    marginHorizontal: 8,
+  },
   label: {
     fontSize: 16,
     marginBottom: 4,
   },
   picker: {
-    marginBottom: 16,
     backgroundColor: "#f9f9f9",
+    marginBottom: 16,
   },
 });
 
