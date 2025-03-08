@@ -11,11 +11,12 @@ yarn-debug.log*
 yarn-error.log*
 
 # Environment variables
-.env
+server/.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.*.local
 
 # Database files
 *.sqlite
