@@ -40,3 +40,4 @@ android/app/build/
 ios/Pods/
 ios/build/
 *.xcworkspace
+.qodo
