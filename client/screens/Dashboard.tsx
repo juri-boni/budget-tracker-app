@@ -1,12 +1,18 @@
 // app/dashboard.tsx
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-// import { BudgetTable } from "@/components/Dahsboard/BudgetTable";
+// import { SafeArea } from "@/components/utility/safe-area.component";
 import { BudgetTable } from "../components/Dahsboard/BudgetTable";
 import DateSelectors from "@/components/Dahsboard/DateSelectors";
 import AddButtons from "@/components/Dahsboard/AddButtons";
+import { ExpenseModal } from "@/components/Dahsboard/Modals/ExpenseModal";
+import CategoryModal from "@/components/Dahsboard/Modals/CategoryModal";
+import BudgetModal from "@/components/Dahsboard/Modals/BudgetModal";
 
 export const Dashboard = () => {
+  const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
   // Dummy data for testing
   const dummyCategories = [
     { id: "1", category: "Food", budget: 500, spent: 350, residual: 150 },
@@ -33,7 +39,26 @@ export const Dashboard = () => {
     <View style={styles.container}>
       {/* <Text style={styles.text}>Dashboard Screen</Text> */}
       <DateSelectors></DateSelectors>
-      <AddButtons></AddButtons>
+      <AddButtons
+        isExpenseModalOpen={isExpenseModalOpen}
+        setIsExpenseModalOpen={setIsExpenseModalOpen}
+        isCategoryModalOpen={isCategoryModalOpen}
+        setIsCategoryModalOpen={setIsCategoryModalOpen}
+        isBudgetModalOpen={isBudgetModalOpen}
+        setIsBudgetModalOpen={setIsBudgetModalOpen}
+      ></AddButtons>
+      <ExpenseModal
+        isExpenseModalOpen={isExpenseModalOpen}
+        setIsExpenseModalOpen={setIsExpenseModalOpen}
+      ></ExpenseModal>
+      <CategoryModal
+        isCategoryModalOpen={isCategoryModalOpen}
+        setIsCategoryModalOpen={setIsCategoryModalOpen}
+      ></CategoryModal>
+      <BudgetModal
+        isBudgetModalOpen={isBudgetModalOpen}
+        setIsBudgetModalOpen={setIsBudgetModalOpen}
+      ></BudgetModal>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <BudgetTable categories={dummyCategories} total={dummyTotal} />
       </ScrollView>

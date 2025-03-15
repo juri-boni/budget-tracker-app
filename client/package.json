@@ -20,6 +20,7 @@
     "@expo/vector-icons": "^14.0.4",
     "@mui/icons-material": "^6.4.6",
     "@mui/material": "^6.4.6",
+    "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-picker/picker": "^2.11.0",
     "@react-navigation/native": "^7.0.15",
     "axios": "^1.8.1",
@@ -46,8 +47,8 @@
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
     "react-query": "^3.39.3",
-    "zustand": "^5.0.3",
-    "@react-native-async-storage/async-storage": "1.23.1"
+    "styled-components": "^6.1.15",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

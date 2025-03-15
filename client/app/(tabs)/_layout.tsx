@@ -17,8 +17,8 @@ export default function TabsLayout() {
   return (
     <Tab.Navigator
       screenOptions={{
-        // headerShown: false,
-        headerTitle: "Essential Budget",
+        headerShown: false,
+        // headerTitle: "Essential Budget",
         headerTitleAlign: "center",
         headerStyle: {
           backgroundColor: "#006D6F", // Colore di sfondo dell'header

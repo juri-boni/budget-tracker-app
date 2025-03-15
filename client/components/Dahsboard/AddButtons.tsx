@@ -3,26 +3,58 @@ import React from "react";
 import { View, StyleSheet, Button } from "react-native";
 import { useRouter } from "expo-router";
 
-const AddButtons = () => {
+interface AddButtonsProps {
+  isExpenseModalOpen: boolean;
+  setIsExpenseModalOpen: (open: boolean) => void;
+  isCategoryModalOpen: boolean;
+  setIsCategoryModalOpen: (open: boolean) => void;
+  isBudgetModalOpen: boolean;
+  setIsBudgetModalOpen: (open: boolean) => void;
+}
+
+const AddButtons: React.FC<AddButtonsProps> = ({
+  isExpenseModalOpen,
+  setIsExpenseModalOpen,
+  isCategoryModalOpen,
+  setIsCategoryModalOpen,
+  isBudgetModalOpen,
+  setIsBudgetModalOpen,
+}) => {
+  console.log("isExpenseModalOpen ? ", isExpenseModalOpen);
   const router = useRouter();
 
   return (
     <View style={styles.container}>
       <View style={styles.button}>
         <Button
-          title="Add Expense"
+          title="Expense"
           onPress={() => {
             // Navigate to the expense form route (update route as needed)
-            router.push("/expenses");
+            // router.push("/expenses");
+            console.log("Open Expense Modal");
+            setIsExpenseModalOpen(!isExpenseModalOpen);
           }}
         />
       </View>
       <View style={styles.button}>
         <Button
-          title="Add Category"
+          title="Category"
           onPress={() => {
             // Navigate to the category form route (update route as needed)
-            router.push("/categories");
+            // router.push("/categories");
+            console.log("Open Category Modal");
+            setIsCategoryModalOpen(!isCategoryModalOpen);
+          }}
+        />
+      </View>
+      <View style={styles.button}>
+        <Button
+          title="Budget"
+          onPress={() => {
+            // Navigate to the category form route (update route as needed)
+            // router.push("/categories");
+            console.log("Open Budget Modal");
+            setIsBudgetModalOpen(!isBudgetModalOpen);
           }}
         />
       </View>
