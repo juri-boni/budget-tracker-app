@@ -1,7 +1,6 @@
 // app/dashboard.tsx
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
-// import { SafeArea } from "@/components/utility/safe-area.component";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { BudgetTable } from "../components/Dahsboard/BudgetTable";
 import DateSelectors from "@/components/Dahsboard/DateSelectors";
 import AddButtons from "@/components/Dahsboard/AddButtons";
@@ -13,7 +12,7 @@ export const Dashboard = () => {
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
-  // Dummy data for testing
+
   const dummyCategories = [
     { id: "1", category: "Food", budget: 500, spent: 350, residual: 150 },
     { id: "2", category: "Transport", budget: 200, spent: 50, residual: 150 },
@@ -25,10 +24,8 @@ export const Dashboard = () => {
     { id: "8", category: "Gym", budget: 265, spent: 265, residual: 0 },
     { id: "9", category: "Movies", budget: 145, spent: 120, residual: 25 },
     { id: "10", category: "Dinner", budget: 350, spent: 350, residual: 0 },
-    // Add more categories as needed
   ];
 
-  // Calculate totals from dummyCategories
   const dummyTotal = {
     budget: dummyCategories.reduce((acc, cat) => acc + cat.budget, 0),
     spent: dummyCategories.reduce((acc, cat) => acc + cat.spent, 0),
@@ -37,7 +34,6 @@ export const Dashboard = () => {
 
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.text}>Dashboard Screen</Text> */}
       <DateSelectors></DateSelectors>
       <AddButtons
         isExpenseModalOpen={isExpenseModalOpen}
