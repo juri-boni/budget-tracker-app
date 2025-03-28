@@ -37,10 +37,9 @@ export const ExpensesTable: React.FC<ExpenseTableProps> = ({ expenses }) => {
 const styles = StyleSheet.create({
   table: {
     flex: 1,
-    // backgroundColor: "#c22b34",
     marginTop: 16,
     padding: 15,
-    marginHorizontal: 10, // adds margin on the sides of the table
+    marginHorizontal: 10,
   },
   row: {
     flexDirection: "row",

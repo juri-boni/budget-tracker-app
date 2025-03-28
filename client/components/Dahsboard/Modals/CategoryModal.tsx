@@ -11,54 +11,61 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons } from "@expo/vector-icons";
 
+import { createCategory } from "@/services/categoriesService";
+
 interface CategoryModalProps {
   isCategoryModalOpen: boolean;
   setIsCategoryModalOpen: (open: boolean) => void;
+}
+
+interface CategoryData {
+  name: string;
+  user_id: number;
 }
 
 export const CategoryModal: React.FC<CategoryModalProps> = ({
   isCategoryModalOpen,
   setIsCategoryModalOpen,
 }) => {
-  // Local state for the form inputs
   const [selectedMonth, setSelectedMonth] = useState("00");
-  const [selectedYear, setSelectedYear] = useState(
-    new Date().getFullYear().toString()
-  );
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedCategory, setSelectedCategory] = useState("");
   const [category, setCategory] = useState("");
 
-  // Dummy data arrays
   const months = [
-    { code: "00", name: "Whole Year" },
-    { code: "01", name: "January" },
-    { code: "02", name: "February" },
-    { code: "03", name: "March" },
-    { code: "04", name: "April" },
-    { code: "05", name: "May" },
-    { code: "06", name: "June" },
-    { code: "07", name: "July" },
-    { code: "08", name: "August" },
-    { code: "09", name: "September" },
-    { code: "10", name: "October" },
-    { code: "11", name: "November" },
-    { code: "12", name: "December" },
+    { code: 0, name: "Whole Year" },
+    { code: 1, name: "January" },
+    { code: 2, name: "February" },
+    { code: 3, name: "March" },
+    { code: 4, name: "April" },
+    { code: 5, name: "May" },
+    { code: 6, name: "June" },
+    { code: 7, name: "July" },
+    { code: 8, name: "August" },
+    { code: 9, name: "September" },
+    { code: 10, name: "October" },
+    { code: 11, name: "November" },
+    { code: 12, name: "December" },
   ];
 
   const years = [
-    new Date().getFullYear().toString(),
-    (new Date().getFullYear() + 1).toString(),
-    (new Date().getFullYear() + 2).toString(),
+    new Date().getFullYear(),
+    new Date().getFullYear() + 1,
+    new Date().getFullYear() + 2,
   ];
 
-  const handleSubmit = () => {
-    console.log({
-      selectedMonth,
-      selectedYear,
-      selectedCategory,
-      category,
-    });
+  const categoryData: CategoryData = {
+    name: category,
+    user_id: 1,
+  };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const result = await createCategory(categoryData);
+    } catch (error) {
+      console.error("failed to create new category: ", error);
+    }
     setIsCategoryModalOpen(false);
   };
 

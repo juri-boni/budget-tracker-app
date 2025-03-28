@@ -1,7 +1,6 @@
 // app/Categories.tsx
 import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
-// import { SafeArea } from "@/components/utility/safe-area.component";
 
 export const Home = () => {
   return (

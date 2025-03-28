@@ -32,7 +32,6 @@ const DateSelectors = () => {
   ];
 
   const { selectedYear, setSelectedYear } = useYearStore();
-  console.log(selectedYear);
 
   return (
     <View style={styles.container}>

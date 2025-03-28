@@ -65,16 +65,9 @@ export const Dashboard = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: "center",
-    // justifyContent: "center",
     backgroundColor: "#fff",
   },
   scrollContainer: {
     paddingBottom: 16,
   },
-  // text: {
-  //   fontSize: 18,
-  //   color: "#000",
-  //   marginBottom: 16,
-  // },
 });

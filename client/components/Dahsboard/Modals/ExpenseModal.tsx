@@ -22,7 +22,6 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
   isExpenseModalOpen,
   setIsExpenseModalOpen,
 }) => {
-  // Local state for the form inputs
   const [selectedMonth, setSelectedMonth] = useState("00");
   const [selectedYear, setSelectedYear] = useState(
     new Date().getFullYear().toString()
@@ -30,27 +29,26 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
   const [selectedCategory, setSelectedCategory] = useState("");
   const [amount, setAmount] = useState("");
 
-  // Dummy data arrays
   const months = [
-    { code: "00", name: "Whole Year" },
-    { code: "01", name: "January" },
-    { code: "02", name: "February" },
-    { code: "03", name: "March" },
-    { code: "04", name: "April" },
-    { code: "05", name: "May" },
-    { code: "06", name: "June" },
-    { code: "07", name: "July" },
-    { code: "08", name: "August" },
-    { code: "09", name: "September" },
-    { code: "10", name: "October" },
-    { code: "11", name: "November" },
-    { code: "12", name: "December" },
+    { code: 0, name: "Whole Year" },
+    { code: 1, name: "January" },
+    { code: 2, name: "February" },
+    { code: 3, name: "March" },
+    { code: 4, name: "April" },
+    { code: 5, name: "May" },
+    { code: 6, name: "June" },
+    { code: 7, name: "July" },
+    { code: 8, name: "August" },
+    { code: 9, name: "September" },
+    { code: 10, name: "October" },
+    { code: 11, name: "November" },
+    { code: 12, name: "December" },
   ];
 
   const years = [
-    new Date().getFullYear().toString(),
-    (new Date().getFullYear() + 1).toString(),
-    (new Date().getFullYear() + 2).toString(),
+    new Date().getFullYear(),
+    new Date().getFullYear() + 1,
+    new Date().getFullYear() + 2,
   ];
 
   const categories = [
@@ -60,25 +58,14 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
   ];
 
   const handleSubmit = () => {
-    // For now, simply log the data.
     console.log({
       selectedMonth,
       selectedYear,
       selectedCategory,
       amount,
     });
-    // Close the modal after submission
     setIsExpenseModalOpen(false);
   };
-
-  // const pickerRef = useRef();
-  // function open() {
-  //   pickerRef.current.focus();
-  // }
-
-  // function close() {
-  //   pickerRef.current.blur();
-  // }
 
   return (
     <Modal
@@ -93,16 +80,9 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
 
           <Text>Month:</Text>
           <Picker
-            // ref={pickerRef}
-            // enabled={true}
-            mode="dropdown" // dialog
-            // dropdownIconColor="#12FF32"
+            mode="dropdown"
             selectedValue={selectedMonth}
             onValueChange={(itemValue) => setSelectedMonth(itemValue)}
-            // onValueChange={(itemValue, itemPosition) => {
-            //   console.log(itemPosition);
-            //   setSelectedMonth(itemValue);
-            // }}
             style={styles.picker}
           >
             {months.map((month) => (
@@ -132,7 +112,6 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
             onValueChange={(itemValue) => setSelectedCategory(itemValue)}
             style={styles.picker}
             prompt="Select a Category"
-            // numberOfLines={3}
           >
             {categories.map((cat) => (
               <Picker.Item key={cat.id} label={cat.name} value={cat.name} />

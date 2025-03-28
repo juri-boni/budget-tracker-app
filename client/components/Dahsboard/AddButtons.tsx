@@ -20,7 +20,6 @@ const AddButtons: React.FC<AddButtonsProps> = ({
   isBudgetModalOpen,
   setIsBudgetModalOpen,
 }) => {
-  console.log("isExpenseModalOpen ? ", isExpenseModalOpen);
   const router = useRouter();
 
   return (
@@ -29,9 +28,6 @@ const AddButtons: React.FC<AddButtonsProps> = ({
         <Button
           title="Expense"
           onPress={() => {
-            // Navigate to the expense form route (update route as needed)
-            // router.push("/expenses");
-            console.log("Open Expense Modal");
             setIsExpenseModalOpen(!isExpenseModalOpen);
           }}
         />
@@ -40,9 +36,6 @@ const AddButtons: React.FC<AddButtonsProps> = ({
         <Button
           title="Category"
           onPress={() => {
-            // Navigate to the category form route (update route as needed)
-            // router.push("/categories");
-            console.log("Open Category Modal");
             setIsCategoryModalOpen(!isCategoryModalOpen);
           }}
         />
@@ -51,9 +44,6 @@ const AddButtons: React.FC<AddButtonsProps> = ({
         <Button
           title="Budget"
           onPress={() => {
-            // Navigate to the category form route (update route as needed)
-            // router.push("/categories");
-            console.log("Open Budget Modal");
             setIsBudgetModalOpen(!isBudgetModalOpen);
           }}
         />

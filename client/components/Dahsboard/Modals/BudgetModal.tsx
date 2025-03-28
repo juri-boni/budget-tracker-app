@@ -1,5 +1,5 @@
 // components/Dashboard/BudgetModal.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   StyleSheet,
@@ -11,57 +11,94 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons } from "@expo/vector-icons";
 
+import { createBudget } from "@/services/budgetsService";
+import { getAllCategories } from "@/services/categoriesService";
+
 interface BudgetModalProps {
   isBudgetModalOpen: boolean;
   setIsBudgetModalOpen: (open: boolean) => void;
+}
+
+interface BudgetData {
+  amount: number;
+  month: number;
+  year: number;
+  user_id: number;
+  category_id: number;
+}
+
+interface CategoryData {
+  id: number;
+  name: string;
+  user_id: number;
 }
 
 export const BudgetModal: React.FC<BudgetModalProps> = ({
   isBudgetModalOpen,
   setIsBudgetModalOpen,
 }) => {
-  const [selectedMonth, setSelectedMonth] = useState("00");
-  const [selectedYear, setSelectedYear] = useState(
-    new Date().getFullYear().toString()
-  );
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [amount, setAmount] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState(0);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedCategory, setSelectedCategory] = useState(0);
+  const [amount, setAmount] = useState(0);
+
+  const [categories, setCategories] = useState<CategoryData[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await getAllCategories();
+        setCategories(res);
+      } catch (err) {}
+    };
+    fetchCategories();
+  }, [isBudgetModalOpen]);
 
   const months = [
-    { code: "00", name: "Whole Year" },
-    { code: "01", name: "January" },
-    { code: "02", name: "February" },
-    { code: "03", name: "March" },
-    { code: "04", name: "April" },
-    { code: "05", name: "May" },
-    { code: "06", name: "June" },
-    { code: "07", name: "July" },
-    { code: "08", name: "August" },
-    { code: "09", name: "September" },
-    { code: "10", name: "October" },
-    { code: "11", name: "November" },
-    { code: "12", name: "December" },
+    { code: 0, name: "Whole Year" },
+    { code: 1, name: "January" },
+    { code: 2, name: "February" },
+    { code: 3, name: "March" },
+    { code: 4, name: "April" },
+    { code: 5, name: "May" },
+    { code: 6, name: "June" },
+    { code: 7, name: "July" },
+    { code: 8, name: "August" },
+    { code: 9, name: "September" },
+    { code: 10, name: "October" },
+    { code: 11, name: "November" },
+    { code: 12, name: "December" },
   ];
 
   const years = [
-    new Date().getFullYear().toString(),
-    (new Date().getFullYear() + 1).toString(),
-    (new Date().getFullYear() + 2).toString(),
+    new Date().getFullYear(),
+    new Date().getFullYear() + 1,
+    new Date().getFullYear() + 2,
   ];
 
-  const categories = [
-    { id: "1", name: "Food" },
-    { id: "2", name: "Transport" },
-    { id: "3", name: "Entertainment" },
-  ];
+  // const categories = [
+  //   { id: "1", name: "Food" },
+  //   { id: "2", name: "Transport" },
+  //   { id: "3", name: "Entertainment" },
+  // ];
 
-  const handleSubmit = () => {
-    console.log({
-      selectedMonth,
-      selectedYear,
-      selectedCategory,
-      amount,
-    });
+  const budgetData: BudgetData = {
+    amount: amount,
+    month: selectedMonth,
+    year: selectedYear,
+    user_id: 1,
+    category_id: selectedCategory,
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      // console.log(budgetData);
+      const result = await createBudget(budgetData);
+      // console.log(result);
+    } catch (error) {
+      console.error("failed to add a new budget: ", error);
+    }
     setIsBudgetModalOpen(false);
   };
 
@@ -106,13 +143,14 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
 
           <Text>Category:</Text>
           <Picker
+            mode="dropdown"
             selectedValue={selectedCategory}
             onValueChange={(itemValue) => setSelectedCategory(itemValue)}
             style={styles.picker}
             prompt="Select a Category"
           >
             {categories.map((cat) => (
-              <Picker.Item key={cat.id} label={cat.name} value={cat.name} />
+              <Picker.Item key={cat.id} label={cat.name} value={cat.id} />
             ))}
           </Picker>
 
