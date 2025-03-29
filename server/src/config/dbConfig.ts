@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-import { Sequelize } from 'sequelize';
+import dotenv from "dotenv";
+import { Sequelize } from "sequelize";
 
 // Load environment variables from the .env file
 dotenv.config();
@@ -13,22 +13,17 @@ const DB_HOST = process.env.DB_HOST as string;
 const DB_PORT = process.env.DB_PORT as string;
 
 // Create a new Sequelize insatnce and connect to PostgreSQL
-const sequelize = new Sequelize(
-  DB_DATABASE,
-  DB_USER,
-  DB_PASSWORD,
-  {
-    host: DB_HOST,                  // Host address
-    port: parseInt(DB_PORT, 10),    // DB Port
-    dialect: 'postgres',            // DB Type (PostgreSQL)
-    logging: false,                 // Disable query log
-  }
-);
+const sequelize = new Sequelize(DB_DATABASE, DB_USER, DB_PASSWORD, {
+  host: DB_HOST, // Host address
+  port: parseInt(DB_PORT, 10), // DB Port
+  dialect: "postgres", // DB Type (PostgreSQL)
+  logging: false, // Disable query log
+});
 
 export default sequelize;
 export const dbConfig = {
   development: {
-    driver: 'postgres',
+    driver: "postgres",
     host: DB_HOST,
     user: DB_USER,
     password: DB_PASSWORD,
@@ -36,7 +31,7 @@ export const dbConfig = {
     port: parseInt(DB_PORT, 10),
   },
   production: {
-    driver: 'postgres',
+    driver: "postgres",
     host: DB_HOST,
     user: DB_USER,
     password: DB_PASSWORD,

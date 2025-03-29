@@ -4,10 +4,13 @@ import { View, Text, StyleSheet } from "react-native";
 import TableRow from "./TableRow";
 
 type ExpensesData = {
-  id: string;
-  category: string;
+  id: number;
   amount: number;
+  category_id: number;
+  category_name: string;
   date: string;
+  description: string;
+  user_id: number;
 };
 
 type ExpenseTableProps = {
@@ -26,8 +29,8 @@ export const ExpensesTable: React.FC<ExpenseTableProps> = ({ expenses }) => {
         <TableRow
           key={expense.id}
           amount={expense.amount}
-          category={expense.category}
-          date={expense.date}
+          category={expense.category_name}
+          date={new Date(expense.date).toLocaleDateString("it-IT")}
         />
       ))}
     </View>

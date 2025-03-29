@@ -1,9 +1,46 @@
 // app/Expenses.tsx
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import ExpensesTable from "@/components/Expenses/ExpensesTable";
+import { getAllExpenses } from "@/services/expensesService";
+
+interface ExpensesData {
+  id: number;
+  amount: number;
+  category_id: number;
+  category_name: string;
+  date: string;
+  description: string;
+  user_id: number;
+}
 
 export const Expenses = () => {
+  const [expenses, setExpenses] = useState<ExpensesData[]>([]);
+  console.log(expenses);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchExpenses = async () => {
+        const result = await getAllExpenses();
+        setExpenses(result);
+      };
+
+      fetchExpenses();
+    }, [])
+  );
+
+  // useEffect(() => {
+  //   const fetchExpenses = async () => {
+  //     const result = await getAllExpenses();
+  //     // console.log("result === ", result);
+  //     setExpenses(result);
+  //     // console.log(result);
+  //   };
+
+  //   fetchExpenses();
+  // }, []);
+
   const dummyExpenses = [
     { id: "01", category: "Grocery", amount: 24.33, date: "01/02/2025" },
     { id: "02", category: "Transport", amount: 4.03, date: "06/02/2025" },
@@ -29,7 +66,7 @@ export const Expenses = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <ExpensesTable expenses={dummyExpenses}></ExpensesTable>
+      <ExpensesTable expenses={expenses}></ExpensesTable>
     </ScrollView>
   );
 };
