@@ -1,5 +1,4 @@
-// components/Dashboard/ExpenseModal.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   StyleSheet,
@@ -10,60 +9,77 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons } from "@expo/vector-icons";
-
-import { useRef } from "react";
-
+import { Calendar } from "react-native-calendars";
+import { createExpense } from "@/services/expensesService";
+import { getAllCategories } from "@/services/categoriesService";
 interface ExpenseModalProps {
   isExpenseModalOpen: boolean;
   setIsExpenseModalOpen: (open: boolean) => void;
+}
+
+interface ExpenseData {
+  amount: number;
+  date: string;
+  description: string;
+  user_id: number;
+  category_id: number;
+}
+
+interface CategoryData {
+  id: number;
+  name: string;
+  user_id: number;
 }
 
 export const ExpenseModal: React.FC<ExpenseModalProps> = ({
   isExpenseModalOpen,
   setIsExpenseModalOpen,
 }) => {
-  const [selectedMonth, setSelectedMonth] = useState("00");
-  const [selectedYear, setSelectedYear] = useState(
-    new Date().getFullYear().toString()
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString());
+  const [selectedDateString, setSelectedDateString] = useState(
+    new Date().toISOString().split("T")[0]
   );
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [amount, setAmount] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(0);
+  const [amount, setAmount] = useState(0);
+  const [description, setDescription] = useState("");
+  const [categories, setCategories] = useState<CategoryData[]>([]);
 
-  const months = [
-    { code: 0, name: "Whole Year" },
-    { code: 1, name: "January" },
-    { code: 2, name: "February" },
-    { code: 3, name: "March" },
-    { code: 4, name: "April" },
-    { code: 5, name: "May" },
-    { code: 6, name: "June" },
-    { code: 7, name: "July" },
-    { code: 8, name: "August" },
-    { code: 9, name: "September" },
-    { code: 10, name: "October" },
-    { code: 11, name: "November" },
-    { code: 12, name: "December" },
-  ];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await getAllCategories();
+        setCategories(res);
+      } catch (err) {}
+    };
+    fetchCategories();
+  }, [isExpenseModalOpen]);
 
-  const years = [
-    new Date().getFullYear(),
-    new Date().getFullYear() + 1,
-    new Date().getFullYear() + 2,
-  ];
+  // const handleSubmit = () => {
+  //   console.log({
+  //     selectedDate,
+  //     selectedCategory,
+  //     amount,
+  //   });
+  //   setIsExpenseModalOpen(false);
+  // };
 
-  const categories = [
-    { id: "1", name: "Food" },
-    { id: "2", name: "Transport" },
-    { id: "3", name: "Entertainment" },
-  ];
+  const expenseData: ExpenseData = {
+    amount: amount,
+    date: selectedDate,
+    description: description,
+    user_id: 1,
+    category_id: selectedCategory,
+  };
 
-  const handleSubmit = () => {
-    console.log({
-      selectedMonth,
-      selectedYear,
-      selectedCategory,
-      amount,
-    });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      // console.log(budgetData);
+      const result = await createExpense(expenseData);
+      // console.log(result);
+    } catch (error) {
+      console.error("failed to add a new expense: ", error);
+    }
     setIsExpenseModalOpen(false);
   };
 
@@ -78,57 +94,51 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
         <View style={styles.modalView}>
           <Text style={styles.title}>Insert Expense</Text>
 
-          <Text>Month:</Text>
-          <Picker
-            mode="dropdown"
-            selectedValue={selectedMonth}
-            onValueChange={(itemValue) => setSelectedMonth(itemValue)}
-            style={styles.picker}
-          >
-            {months.map((month) => (
-              <Picker.Item
-                key={month.code}
-                label={month.name}
-                value={month.code}
-              />
-            ))}
-          </Picker>
+          <Text>Seleziona la data:</Text>
+          <Calendar
+            onDayPress={(day) => {
+              setSelectedDate(new Date(day.dateString).toISOString());
+              setSelectedDateString(day.dateString);
+            }}
+            markedDates={{
+              [selectedDateString]: {
+                selected: true,
+                selectedColor: "#2196F3",
+              },
+            }}
+            style={styles.calendar}
+          />
 
-          <Text>Year:</Text>
-          <Picker
-            selectedValue={selectedYear}
-            onValueChange={(itemValue) => setSelectedYear(itemValue)}
-            style={styles.picker}
-            prompt="Select a Year"
-          >
-            {years.map((year, index) => (
-              <Picker.Item key={index} label={year} value={year} />
-            ))}
-          </Picker>
-
-          <Text>Category:</Text>
+          <Text>Categoria:</Text>
           <Picker
             selectedValue={selectedCategory}
             onValueChange={(itemValue) => setSelectedCategory(itemValue)}
             style={styles.picker}
-            prompt="Select a Category"
+            prompt="Seleziona una categoria"
           >
             {categories.map((cat) => (
-              <Picker.Item key={cat.id} label={cat.name} value={cat.name} />
+              <Picker.Item key={cat.id} label={cat.name} value={cat.id} />
             ))}
           </Picker>
 
-          <Text>Amount:</Text>
+          <Text>Importo:</Text>
           <TextInput
             style={styles.input}
-            placeholder="Enter amount"
+            placeholder="Inserisci l'importo"
             keyboardType="numeric"
             value={amount}
             onChangeText={setAmount}
           />
+          <Text>Descrizione:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Inserisci la descrizione"
+            value={description}
+            onChangeText={setDescription}
+          />
 
           <Pressable style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Submit Expense</Text>
+            <Text style={styles.buttonText}>Invia Spesa</Text>
           </Pressable>
 
           <Pressable
@@ -160,6 +170,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 10,
     textAlign: "center",
+  },
+  calendar: {
+    marginVertical: 8,
   },
   picker: {
     marginVertical: 8,
