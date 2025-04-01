@@ -9,6 +9,7 @@ import CategoryModal from "@/components/Dahsboard/Modals/CategoryModal";
 import BudgetModal from "@/components/Dahsboard/Modals/BudgetModal";
 
 export const Dashboard = () => {
+  console.log(process.env.EXPO_PUBLIC_API_URL);
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);

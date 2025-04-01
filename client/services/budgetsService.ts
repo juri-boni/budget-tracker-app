@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL_BUDGETS = "http://192.168.1.7:5000/v1/budget"; //inserito indirizzo ip del pc per testare da expo Go
-// const API_URL_BUDGETS = "http://localhost:5000/v1/budget";
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:5000/v1";
+const API_URL_BUDGETS = `${API_URL}/budget`;
 
 export const createBudget = async (budgetData: {
   amount: number;

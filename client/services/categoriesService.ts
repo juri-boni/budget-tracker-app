@@ -1,7 +1,6 @@
 import axios from "axios";
-
-const API_URL_CATEGORIES = "http://192.168.1.7:5000/v1/categories"; //inserito indirizzo ip del pc per testare da expo Go
-// const API_URL_CATEGORIES = "http://localhost:5000/v1/categories";
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:5000/v1";
+const API_URL_CATEGORIES = `${API_URL}/categories`;
 
 export const createCategory = async (categoryData: {
   name: string;
