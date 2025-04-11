@@ -12,9 +12,20 @@ export const createBudget = async (budgetData: {
 }) => {
   try {
     const response = await axios.post(`${API_URL_BUDGETS}`, budgetData);
-    // console.log(response);
+    console.log("createBudget - res ", response);
   } catch (error) {
     console.error("Error adding budget: ", error);
     throw error;
+  }
+};
+
+export const getBudgets = async () => {
+  try {
+    const response = await axios.get(`${API_URL_BUDGETS}`);
+    const res = response.data.results;
+    // console.log("GETTING ALL BUDGETS: ", res);
+    return res;
+  } catch (error) {
+    console.error(error);
   }
 };

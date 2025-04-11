@@ -74,7 +74,7 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // console.log(budgetData);
+      // console.log(expenseData);
       const result = await createExpense(expenseData);
       // console.log(result);
     } catch (error) {

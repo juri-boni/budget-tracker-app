@@ -32,6 +32,7 @@ export const createCategory = async (categoryData: {
 export const getAllCategories = async () => {
   try {
     const response = await axios.get(`${API_URL_CATEGORIES}`);
+    // console.log("getAllCategories RESPONSE: ", response);
     const data = response.data;
     const results = data.results;
     return results;

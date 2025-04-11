@@ -9,7 +9,7 @@ const DateSelectors = () => {
   const { selectedMonth, setSelectedMonth } = useMonthStore();
   const currentYear = new Date().getFullYear();
   const months = [
-    { code: "00", name: "Whole Year" },
+    // { code: "00", name: "Whole Year" },
     { code: "01", name: "January" },
     { code: "02", name: "February" },
     { code: "03", name: "March" },

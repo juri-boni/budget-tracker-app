@@ -23,6 +23,7 @@ export const ExpensesTable: React.FC<ExpenseTableProps> = ({ expenses }) => {
       <View style={styles.row}>
         <Text style={styles.cell}>Expense</Text>
         <Text style={styles.cell}>Category</Text>
+        <Text style={styles.cell}>Description</Text>
         <Text style={styles.cell}>Date</Text>
       </View>
       {expenses.map((expense) => (
@@ -30,6 +31,7 @@ export const ExpensesTable: React.FC<ExpenseTableProps> = ({ expenses }) => {
           key={expense.id}
           amount={expense.amount}
           category={expense.category_name}
+          description={expense.description}
           date={new Date(expense.date).toLocaleDateString("it-IT")}
         />
       ))}

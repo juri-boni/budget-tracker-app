@@ -1,5 +1,6 @@
 // app/dashboard.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { BudgetTable } from "../components/Dahsboard/BudgetTable";
 import DateSelectors from "@/components/Dahsboard/DateSelectors";
@@ -8,30 +9,56 @@ import { ExpenseModal } from "@/components/Dahsboard/Modals/ExpenseModal";
 import CategoryModal from "@/components/Dahsboard/Modals/CategoryModal";
 import BudgetModal from "@/components/Dahsboard/Modals/BudgetModal";
 
+import { getBudgets } from "@/services/budgetsService";
+
+interface BudgetsData {
+  id: number;
+  amount: number;
+  month: number;
+  year: number;
+  user_id: number;
+  category_id: number;
+}
+
 export const Dashboard = () => {
   console.log(process.env.EXPO_PUBLIC_API_URL);
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
+  const [budgets, setBudgets] = useState<BudgetsData[]>([]);
 
-  const dummyCategories = [
-    { id: "1", category: "Food", budget: 500, spent: 350, residual: 150 },
-    { id: "2", category: "Transport", budget: 200, spent: 50, residual: 150 },
-    { id: "3", category: "Health", budget: 350, spent: 120, residual: 230 },
-    { id: "4", category: "Grocery", budget: 145, spent: 120, residual: 25 },
-    { id: "5", category: "Comics", budget: 25, spent: 35, residual: -10 },
-    { id: "6", category: "Weapons", budget: 1480, spent: 1200, residual: 280 },
-    { id: "7", category: "Animals", budget: 85, spent: 0, residual: 85 },
-    { id: "8", category: "Gym", budget: 265, spent: 265, residual: 0 },
-    { id: "9", category: "Movies", budget: 145, spent: 120, residual: 25 },
-    { id: "10", category: "Dinner", budget: 350, spent: 350, residual: 0 },
-  ];
+  console.log("BUDGETS IN DASHBOARD: ", budgets);
 
-  const dummyTotal = {
-    budget: dummyCategories.reduce((acc, cat) => acc + cat.budget, 0),
-    spent: dummyCategories.reduce((acc, cat) => acc + cat.spent, 0),
-    residual: dummyCategories.reduce((acc, cat) => acc + cat.residual, 0),
-  };
+  useFocusEffect(
+    useCallback(() => {
+      const fetchBudgets = async () => {
+        const result = await getBudgets();
+        console.log("FETCH BUDGETS IN DASHBOARD - ", result);
+        setBudgets(result);
+      };
+
+      fetchBudgets();
+    }, [])
+  );
+
+  // const dummyCategories = [
+  //   { id: "1", category: "Food", budget: 500, spent: 350, residual: 150 },
+  //   { id: "2", category: "Transport", budget: 200, spent: 50, residual: 150 },
+  //   { id: "3", category: "Health", budget: 350, spent: 120, residual: 230 },
+  //   { id: "4", category: "Grocery", budget: 145, spent: 120, residual: 25 },
+  //   { id: "5", category: "Comics", budget: 25, spent: 35, residual: -10 },
+  //   { id: "6", category: "Weapons", budget: 1480, spent: 1200, residual: 280 },
+  //   { id: "7", category: "Animals", budget: 85, spent: 0, residual: 85 },
+  //   { id: "8", category: "Gym", budget: 265, spent: 265, residual: 0 },
+  //   { id: "9", category: "Movies", budget: 145, spent: 120, residual: 25 },
+  //   { id: "10", category: "Dinner", budget: 350, spent: 350, residual: 0 },
+  // ];
+
+  // const dummyTotal = {
+  //   budget: dummyCategories.reduce((acc, cat) => acc + cat.budget, 0),
+  //   spent: dummyCategories.reduce((acc, cat) => acc + cat.spent, 0),
+  //   residual: dummyCategories.reduce((acc, cat) => acc + cat.residual, 0),
+  // };
 
   return (
     <View style={styles.container}>
@@ -57,7 +84,7 @@ export const Dashboard = () => {
         setIsBudgetModalOpen={setIsBudgetModalOpen}
       ></BudgetModal>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <BudgetTable categories={dummyCategories} total={dummyTotal} />
+        <BudgetTable budgets={budgets} />
       </ScrollView>
     </View>
   );

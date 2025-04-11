@@ -3,24 +3,28 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 type TableRowProps = {
-  category: string;
-  budget: number;
-  spent: number;
-  residual: number;
+  amount: number;
+  month: number;
+  year: number;
+  category: number;
 };
 
 export const TableRow: React.FC<TableRowProps> = ({
+  amount,
+  month,
+  year,
   category,
-  budget,
-  spent,
-  residual,
 }) => {
   return (
     <View style={styles.row}>
       <Text style={styles.cell}>{category}</Text>
-      <Text style={styles.cell}>{budget}</Text>
-      <Text style={styles.cell}>{spent}</Text>
-      <Text style={styles.cell}>{residual}</Text>
+      {/* <Text style={styles.cell}>{category}</Text> */}
+      {/* <Text style={styles.cell}>
+        {month}/{year}
+      </Text> */}
+      <Text style={styles.cell}>{amount}</Text>
+      <Text style={styles.cell}>calc</Text>
+      <Text style={styles.cell}>calc</Text>
     </View>
   );
 };

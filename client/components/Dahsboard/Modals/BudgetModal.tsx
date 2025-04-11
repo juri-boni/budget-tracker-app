@@ -41,6 +41,9 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [amount, setAmount] = useState(0);
+  // console.log("amount type: ", typeof amount);
+  // console.log("selectedMonth type: ", typeof selectedMonth);
+  // console.log("selectedYear type: ", typeof selectedYear);
 
   const [categories, setCategories] = useState<CategoryData[]>([]);
 
@@ -55,7 +58,7 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
   }, [isBudgetModalOpen]);
 
   const months = [
-    { code: 0, name: "Whole Year" },
+    // { code: 0, name: "Whole Year" },
     { code: 1, name: "January" },
     { code: 2, name: "February" },
     { code: 3, name: "March" },
@@ -93,7 +96,7 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // console.log(budgetData);
+      console.log(budgetData);
       const result = await createBudget(budgetData);
       // console.log(result);
     } catch (error) {
