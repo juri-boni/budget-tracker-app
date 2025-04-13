@@ -12,6 +12,7 @@ interface CategoryData {
 
 export const Categories = () => {
   const [categories, setCategories] = useState<CategoryData[]>([]);
+  // console.log(categories);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -25,9 +26,10 @@ export const Categories = () => {
 
   return (
     <View style={styles.container}>
-      {categories.map((category) => (
-        <Text key={category.id}>{category.name}</Text>
-      ))}
+      {categories &&
+        categories.map((category) => (
+          <Text key={category.id}>{category.name}</Text>
+        ))}
       <Text style={styles.text}>Categories Screen</Text>
     </View>
   );

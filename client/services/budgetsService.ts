@@ -29,3 +29,22 @@ export const getBudgets = async () => {
     console.error(error);
   }
 };
+
+export const getBudgetsByMonthYear = async (budgetData: {
+  month: string;
+  year: string;
+}) => {
+  try {
+    const response = await axios.get(`${API_URL_BUDGETS}/by-date`, {
+      params: {
+        month: budgetData.month,
+        year: budgetData.year,
+      },
+    });
+    const res = response.data.results;
+    // console.log(res);
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
+};

@@ -11,7 +11,8 @@ type MonthState = {
 export const useMonthStore = create<MonthState>()(
   persist(
     (set) => ({
-      selectedMonth: "00", // default to "Whole Year"
+      // selectedMonth: "00", // default to "Whole Year"
+      selectedMonth: (new Date().getMonth() + 1).toString().padStart(2, "0"),
       setSelectedMonth: (month: string) => set({ selectedMonth: month }),
     }),
     {

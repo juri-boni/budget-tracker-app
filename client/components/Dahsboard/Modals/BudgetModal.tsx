@@ -96,7 +96,7 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      console.log(budgetData);
+      // console.log(budgetData);
       const result = await createBudget(budgetData);
       // console.log(result);
     } catch (error) {
@@ -123,13 +123,14 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
             onValueChange={(itemValue) => setSelectedMonth(itemValue)}
             style={styles.picker}
           >
-            {months.map((month) => (
-              <Picker.Item
-                key={month.code}
-                label={month.name}
-                value={month.code}
-              />
-            ))}
+            {months &&
+              months.map((month) => (
+                <Picker.Item
+                  key={month.code}
+                  label={month.name}
+                  value={month.code}
+                />
+              ))}
           </Picker>
 
           <Text>Year:</Text>
@@ -139,9 +140,10 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
             style={styles.picker}
             prompt="Select a Year"
           >
-            {years.map((year, index) => (
-              <Picker.Item key={index} label={year} value={year} />
-            ))}
+            {years &&
+              years.map((year, index) => (
+                <Picker.Item key={index} label={year} value={year} />
+              ))}
           </Picker>
 
           <Text>Category:</Text>
@@ -152,9 +154,10 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
             style={styles.picker}
             prompt="Select a Category"
           >
-            {categories.map((cat) => (
-              <Picker.Item key={cat.id} label={cat.name} value={cat.id} />
-            ))}
+            {categories &&
+              categories.map((cat) => (
+                <Picker.Item key={cat.id} label={cat.name} value={cat.id} />
+              ))}
           </Picker>
 
           <Text>Amount:</Text>

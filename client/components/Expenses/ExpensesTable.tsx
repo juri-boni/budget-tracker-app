@@ -26,15 +26,16 @@ export const ExpensesTable: React.FC<ExpenseTableProps> = ({ expenses }) => {
         <Text style={styles.cell}>Description</Text>
         <Text style={styles.cell}>Date</Text>
       </View>
-      {expenses.map((expense) => (
-        <TableRow
-          key={expense.id}
-          amount={expense.amount}
-          category={expense.category_name}
-          description={expense.description}
-          date={new Date(expense.date).toLocaleDateString("it-IT")}
-        />
-      ))}
+      {expenses &&
+        expenses.map((expense) => (
+          <TableRow
+            key={expense.id}
+            amount={expense.amount}
+            category={expense.category_name}
+            description={expense.description}
+            date={new Date(expense.date).toLocaleDateString("it-IT")}
+          />
+        ))}
     </View>
   );
 };

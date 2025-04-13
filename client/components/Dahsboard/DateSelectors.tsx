@@ -1,9 +1,12 @@
 // components/Dashboard/DateSelectors.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useMonthStore } from "@/store/useMonthStore";
 import { useYearStore } from "@/store/useYearStore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { getBudgetsByMonthYear } from "@/services/budgetsService";
 
 const DateSelectors = () => {
   const { selectedMonth, setSelectedMonth } = useMonthStore();
@@ -24,6 +27,12 @@ const DateSelectors = () => {
     { code: "12", name: "December" },
   ];
 
+  // useEffect(() => {
+  //   AsyncStorage.getItem("year-storage").then((data) =>
+  //     console.log("RAW YEAR STORAGE:", data)
+  //   );
+  // }, []);
+
   const years = [
     currentYear,
     currentYear + 1,
@@ -32,6 +41,12 @@ const DateSelectors = () => {
   ];
 
   const { selectedYear, setSelectedYear } = useYearStore();
+
+  // console.log("year type:", typeof selectedYear);
+  // console.log("month type:", typeof selectedMonth);
+
+  // console.log("selectedYear from store:", selectedYear);
+  // console.log("hydrated? ", hydrated);
 
   return (
     <View style={styles.container}>
@@ -43,13 +58,14 @@ const DateSelectors = () => {
             onValueChange={(value) => setSelectedMonth(value)}
             style={styles.picker}
           >
-            {months.map((month) => (
-              <Picker.Item
-                key={month.code}
-                label={month.name}
-                value={month.code}
-              />
-            ))}
+            {months &&
+              months.map((month) => (
+                <Picker.Item
+                  key={month.code}
+                  label={month.name}
+                  value={month.code}
+                />
+              ))}
           </Picker>
         </View>
 
@@ -60,13 +76,14 @@ const DateSelectors = () => {
             onValueChange={(itemValue) => setSelectedYear(itemValue)}
             style={styles.picker}
           >
-            {years.map((year, index) => (
-              <Picker.Item
-                key={index}
-                label={year.toString()}
-                value={year.toString()}
-              />
-            ))}
+            {years &&
+              years.map((year, index) => (
+                <Picker.Item
+                  key={index}
+                  label={year.toString()}
+                  value={year.toString()}
+                />
+              ))}
           </Picker>
         </View>
       </View>

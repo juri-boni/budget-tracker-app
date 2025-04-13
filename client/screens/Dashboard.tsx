@@ -9,7 +9,9 @@ import { ExpenseModal } from "@/components/Dahsboard/Modals/ExpenseModal";
 import CategoryModal from "@/components/Dahsboard/Modals/CategoryModal";
 import BudgetModal from "@/components/Dahsboard/Modals/BudgetModal";
 
-import { getBudgets } from "@/services/budgetsService";
+import { getBudgets, getBudgetsByMonthYear } from "@/services/budgetsService";
+import { useMonthStore } from "@/store/useMonthStore";
+import { useYearStore } from "@/store/useYearStore";
 
 interface BudgetsData {
   id: number;
@@ -17,48 +19,43 @@ interface BudgetsData {
   month: number;
   year: number;
   user_id: number;
-  category_id: number;
+  category_name: string;
 }
 
 export const Dashboard = () => {
-  console.log(process.env.EXPO_PUBLIC_API_URL);
+  const { selectedMonth, setSelectedMonth } = useMonthStore();
+  const { selectedYear, setSelectedYear } = useYearStore();
+
+  // console.log(process.env.EXPO_PUBLIC_API_URL);
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
   const [budgets, setBudgets] = useState<BudgetsData[]>([]);
 
-  console.log("BUDGETS IN DASHBOARD: ", budgets);
+  // console.log("BUDGETS IN DASHBOARD: ", budgets);
+
+  // const dataMonthYear = {
+  //   month: selectedMonth,
+  //   year: selectedYear,
+  // };
 
   useFocusEffect(
     useCallback(() => {
+      console.log("1) calling useCallback ----");
       const fetchBudgets = async () => {
-        const result = await getBudgets();
-        console.log("FETCH BUDGETS IN DASHBOARD - ", result);
+        console.log("2) calling fetchBudget ---");
+        // const result = await getBudgets();
+        const result = await getBudgetsByMonthYear({
+          month: selectedMonth,
+          year: selectedYear,
+        });
+        // console.log("FETCH BUDGETS IN DASHBOARD - ", result);
         setBudgets(result);
       };
 
       fetchBudgets();
-    }, [])
+    }, [selectedMonth, selectedYear])
   );
-
-  // const dummyCategories = [
-  //   { id: "1", category: "Food", budget: 500, spent: 350, residual: 150 },
-  //   { id: "2", category: "Transport", budget: 200, spent: 50, residual: 150 },
-  //   { id: "3", category: "Health", budget: 350, spent: 120, residual: 230 },
-  //   { id: "4", category: "Grocery", budget: 145, spent: 120, residual: 25 },
-  //   { id: "5", category: "Comics", budget: 25, spent: 35, residual: -10 },
-  //   { id: "6", category: "Weapons", budget: 1480, spent: 1200, residual: 280 },
-  //   { id: "7", category: "Animals", budget: 85, spent: 0, residual: 85 },
-  //   { id: "8", category: "Gym", budget: 265, spent: 265, residual: 0 },
-  //   { id: "9", category: "Movies", budget: 145, spent: 120, residual: 25 },
-  //   { id: "10", category: "Dinner", budget: 350, spent: 350, residual: 0 },
-  // ];
-
-  // const dummyTotal = {
-  //   budget: dummyCategories.reduce((acc, cat) => acc + cat.budget, 0),
-  //   spent: dummyCategories.reduce((acc, cat) => acc + cat.spent, 0),
-  //   residual: dummyCategories.reduce((acc, cat) => acc + cat.residual, 0),
-  // };
 
   return (
     <View style={styles.container}>

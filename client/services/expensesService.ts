@@ -9,10 +9,10 @@ export const createExpense = async (expenseData: {
   user_id: number;
   category_id: number;
 }) => {
-  console.log("CREATE EXPENSE :  DATA :", expenseData);
+  // console.log("CREATE EXPENSE :  DATA :", expenseData);
   try {
     const response = await axios.post(`${API_URL_EXPENSES}`, expenseData);
-    console.log("CREATE NEW EXPENSE -  RES: ", response);
+    // console.log("CREATE NEW EXPENSE -  RES: ", response);
   } catch (error) {
     console.error("Error adding expense: ", error);
     throw error;

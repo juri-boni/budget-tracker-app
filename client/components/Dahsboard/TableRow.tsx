@@ -6,7 +6,7 @@ type TableRowProps = {
   amount: number;
   month: number;
   year: number;
-  category: number;
+  category: string;
 };
 
 export const TableRow: React.FC<TableRowProps> = ({

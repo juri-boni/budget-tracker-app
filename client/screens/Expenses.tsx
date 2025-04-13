@@ -17,7 +17,7 @@ interface ExpensesData {
 
 export const Expenses = () => {
   const [expenses, setExpenses] = useState<ExpensesData[]>([]);
-  console.log("EXPENSES: ", expenses);
+  // console.log("EXPENSES: ", expenses);
 
   useFocusEffect(
     useCallback(() => {

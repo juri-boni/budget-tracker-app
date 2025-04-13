@@ -116,9 +116,10 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
             style={styles.picker}
             prompt="Seleziona una categoria"
           >
-            {categories.map((cat) => (
-              <Picker.Item key={cat.id} label={cat.name} value={cat.id} />
-            ))}
+            {categories &&
+              categories.map((cat) => (
+                <Picker.Item key={cat.id} label={cat.name} value={cat.id} />
+              ))}
           </Picker>
 
           <Text>Importo:</Text>

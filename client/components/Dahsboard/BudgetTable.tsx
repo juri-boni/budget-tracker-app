@@ -22,7 +22,7 @@ type BudgetsData = {
   month: number;
   year: number;
   user_id: number;
-  category_id: number;
+  category_name: string;
 };
 
 type BudgetTableProps = {
@@ -40,17 +40,16 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ budgets }) => {
         <Text style={styles.cell}>Spent</Text>
         <Text style={styles.cell}>Residual</Text>
       </View>
-
-      {budgets.map((budget) => (
-        <TableRow
-          key={budget.id}
-          amount={budget.amount}
-          month={budget.month}
-          year={budget.year}
-          category={budget.category_id}
-        />
-      ))}
-
+      {budgets &&
+        budgets.map((budget) => (
+          <TableRow
+            key={budget.id}
+            amount={budget.amount}
+            month={budget.month}
+            year={budget.year}
+            category={budget.category_name}
+          />
+        ))}
       {/* <View style={styles.footer}>
         <Text style={styles.cell}>Total</Text>
         <Text style={styles.cell}>{total.budget}</Text>
