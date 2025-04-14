@@ -7,7 +7,36 @@ import {
     httpGetUser
 } from '../controllers/Users.controller';
 
+ /**
+* @swagger
+* tags:
+*   name: User
+*   description: The Users API allows you to manage user accounts in the system. It provides endpoints for creating, retrieving, updating, and deleting user information.
+*/
+
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     tags: [User]
+ *     summary: Retrieves a list of all users in the system
+ *     responses:
+ *       200:
+ *         description: A list of items
+ *       500:
+ *         description: Error querying the database TABLE Users
+ */
 UsersRouter.get('/', httpGetUsers);
+/**
+ * @swagger
+ * /users/id:
+ *   get:
+ *     tags: [User]
+ *     summary: Retrieve a single user by ID  
+ *     responses:
+ *       200:
+ *         description: User object
+ */
 UsersRouter.get('/:id', httpGetUser);
 
 

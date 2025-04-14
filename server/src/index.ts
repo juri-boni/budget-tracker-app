@@ -4,6 +4,10 @@ import api from "./routes/api";
 import cors from "cors";
 import "./models/associations";
 
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerOptions from './swagger/swaggerOptions';
+
 const app = express();
 
 // Abilita CORS per tutte le richieste
@@ -11,6 +15,10 @@ app.use(cors());
 
 // Parse any incoming JSON
 app.use(express.json());
+
+// Setup Swagger
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Versioning delle APIs
 app.use("/v1", api);
