@@ -16,7 +16,7 @@ import Category from "../models/Category.model";
 
 async function httpGetExpenses(req: Request, res: Response) {
   try {
-    const requests = await getAllExpenses();
+    const requests = await getAllExpenses(req.query);
     res.status(200).json(requests);
   } catch (err) {
     console.error(err);

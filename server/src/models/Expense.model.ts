@@ -5,6 +5,7 @@ import {
   DataTypes,
   ForeignKey,
   CreationOptional,
+  Op, literal, where
 } from "sequelize";
 import sequelize from "../config/dbConfig";
 import User from "./User.model";
@@ -22,6 +23,13 @@ class Expense extends Model<
   declare user_id: ForeignKey<User["id"]>;
   declare category_id: ForeignKey<Category["id"]>;
   declare deletedAt: Date | null;
+}
+
+interface ExpenseQueryParams {
+  uid?: string;
+  catid?: string;
+  month?: string;
+  year?: string;
 }
 
 // Initialize the Expense model
@@ -64,8 +72,49 @@ Expense.init(
   }
 );
 
-async function getAllExpenses(): Promise<object> {
+async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
   try {
+
+    /**
+     *  SELECT id FROM expenses
+        WHERE user_id = 4
+          AND category_id = 10
+          AND EXTRACT(MONTH FROM date) = 3
+          AND EXTRACT(YEAR FROM date) = 2025;
+     */
+
+    // Clausola WHERE costruita dinamicamente in base ai query parameters ricevuti      
+    const whereClause: any = {};
+    if(params){
+
+      // esempio di qeury params: http://localhost:5000/v1/expenses?uid=1&catid=2&month=3&year=2025
+      const {uid, month, year, catid} = params || {};
+
+      if (uid) whereClause.user_id = uid;
+      if (catid) whereClause.category_id = catid;
+
+      if (month) {
+        // Se ci sono già altre condizioni AND, le manteniamo, altrimenti inizializziamo l'array
+        whereClause[Op.and] = whereClause[Op.and] || [];
+        whereClause[Op.and].push(
+          where(
+            literal(`EXTRACT(MONTH FROM "date")`), //literal permette di scrivere raw SQL
+            parseInt(month)
+          )
+        );
+      }
+
+      if (year) {
+        whereClause[Op.and] = whereClause[Op.and] || [];
+        whereClause[Op.and].push(
+          where(
+            literal(`EXTRACT(YEAR FROM "date")`),
+            parseInt(year)
+          )
+        );
+      }
+
+    }
     // Query the database
     const results = await Expense.findAll({
       attributes: [
@@ -77,11 +126,12 @@ async function getAllExpenses(): Promise<object> {
         "category_id",
         [sequelize.col("Category.name"), "category_name"],
       ],
+      where: whereClause,
       include: [
         {
           model: Category,
           attributes: [],
-        },
+        }
       ],
       raw: true, // Restituisce un oggetto appiattito
     });
