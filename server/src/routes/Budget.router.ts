@@ -11,11 +11,11 @@ import {
 } from "../controllers/Budget.controller";
 
 /**
-* @swagger
-* tags:
-*   name: Budget
-*   description: The Budget API allows you to manage budget information. It provides endpoints for creating, retrieving, updating and deleting budget information.
-*/
+ * @swagger
+ * tags:
+ *   name: Budget
+ *   description: The Budget API allows you to manage budget information. It provides endpoints for creating, retrieving, updating and deleting budget information.
+ */
 
 /**
  * @swagger
@@ -49,7 +49,7 @@ import {
  *       500:
  *         description: Server error
  */
-BudgetRouter.get('/', httpGetBudgetList);
+BudgetRouter.get("/", httpGetBudgetList);
 
 /**
  * @swagger
@@ -87,10 +87,9 @@ BudgetRouter.get('/', httpGetBudgetList);
  *       500:
  *         description: Server error
  */
-BudgetRouter.get('/:id', httpGetBudget);
-BudgetRouter.get("/", httpGetBudgetList);
-BudgetRouter.get("/by-date", httpGetBudgetByMonthYear);
 BudgetRouter.get("/:id", httpGetBudget);
+
+BudgetRouter.get("/by-date", httpGetBudgetByMonthYear);
 
 /**
  * @swagger
@@ -130,7 +129,7 @@ BudgetRouter.get("/:id", httpGetBudget);
  *       500:
  *         description: Server error
  */
-BudgetRouter.post('/', httpAddBudget);
+BudgetRouter.post("/", httpAddBudget);
 
 /**
  * @swagger
@@ -154,9 +153,6 @@ BudgetRouter.post('/', httpAddBudget);
  *       500:
  *         description: Server error
  */
-BudgetRouter.delete('/:id', httpDeleteBudget);
-
-BudgetRouter.post("/", httpAddBudget);
 BudgetRouter.delete("/:id", httpDeleteBudget);
 
 export default BudgetRouter;
