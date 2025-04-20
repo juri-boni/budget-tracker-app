@@ -5,6 +5,7 @@ import {
   DataTypes,
   ForeignKey,
   CreationOptional,
+  Op
 } from "sequelize";
 import sequelize from "../config/dbConfig";
 import User from "./User.model";
@@ -149,6 +150,30 @@ async function addNewCategory(request: Category): Promise<object | null> {
   const { name, user_id } = request;
 
   try {
+
+    // First check if the category exists
+    const categoryExists = await Category.findOne({
+      where: {
+        [Op.and]: [
+          { user_id },
+          sequelize.where(
+            sequelize.fn('LOWER', sequelize.col('name')),
+            sequelize.fn('LOWER', name)
+          )
+        ]
+      }
+    });
+
+    // If the category exists throw an error
+    if(categoryExists){
+      const res: object = {
+        success: false,
+        message: `Error: a Category with the same name has already been set`,
+      };
+      return res;
+    }
+
+    // If the category doesn't exists create a new one
     const newCategory = await Category.create({
       name,
       user_id,
