@@ -51,6 +51,34 @@ import {
  */
 BudgetRouter.get("/", httpGetBudgetList);
 
+/**
+ * @swagger
+ * /budget/by-date:
+ *   get:
+ *     tags: [Budget]
+ *     summary: Retrieve a specific budget filtered by date
+ *     responses:
+ *       200:
+ *         description: A single budget object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 amount:
+ *                   type: number
+ *                   format: float
+ *                 user_id:
+ *                   type: integer
+ *       404:
+ *         description: Budget not found
+ *       500:
+ *         description: Server error
+ */
 BudgetRouter.get("/by-date", httpGetBudgetByMonthYear);
 
 /**
@@ -89,7 +117,6 @@ BudgetRouter.get("/by-date", httpGetBudgetByMonthYear);
  *       500:
  *         description: Server error
  */
-
 BudgetRouter.get("/:id", httpGetBudget);
 
 /**

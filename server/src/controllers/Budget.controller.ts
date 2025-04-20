@@ -18,7 +18,7 @@ import Category from "../models/Category.model";
 
 async function httpGetBudgetList(req: Request, res: Response) {
   try {
-    const requests = await getAllBudget();
+    const requests = await getAllBudget(req.query);
     res.status(200).json(requests);
   } catch (err) {
     console.error(err);

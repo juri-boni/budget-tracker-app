@@ -64,8 +64,21 @@ Budget.init(
   }
 );
 
-async function getAllBudget(): Promise<object> {
+interface BudgetQueryParams {
+  month?: string;
+  year?: string;
+}
+
+async function getAllBudget(params: BudgetQueryParams): Promise<object> {
   try {
+
+    const whereClause: any = {};
+    if(params){
+      const {month, year} = params || {};
+      if(month) whereClause.month = month;
+      if(year) whereClause.year = year;
+    }
+
     const budgetList = await Budget.findAll({
       attributes: [
         "id",
@@ -76,6 +89,7 @@ async function getAllBudget(): Promise<object> {
         "category_id",
         [sequelize.col("Category.name"), "category_name"],
       ],
+      where: whereClause,
       include: [
         {
           model: Category,
@@ -106,6 +120,7 @@ async function getAllBudget(): Promise<object> {
   }
 }
 
+// ********** DEPRECATA *************
 async function getBudgetByMonthYear(
   month: number,
   year: number
@@ -204,7 +219,6 @@ async function addNewBudget(request: Budget): Promise<object> {
     return { error };
   }
 }
-
 async function deleteBudget(id: number): Promise<object> {
   try {
     const budget = await Budget.findByPk(id);
