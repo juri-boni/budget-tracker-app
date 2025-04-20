@@ -192,6 +192,27 @@ async function addNewBudget(request: Budget): Promise<object> {
   const { amount, month, year, user_id, category_id } = request;
 
   try {
+
+    // First check if a budget for the same category has been set
+    const budgetExists = await Budget.findOne({
+      where: {
+        'user_id': user_id,
+        'category_id': category_id,
+        'month': month,
+        'year': year
+      }
+    });
+
+    // If the budget exists throw an error
+    if(budgetExists){
+      const res: object = {
+        success: false,
+        message: `Error: a Budget for the Category with ID: ${category_id} has already been set`,
+      };
+      return res;
+    }
+
+    // If the budget doesn't exists create a new one
     const newBudget = await Budget.create({
       amount,
       month,
