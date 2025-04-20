@@ -30,3 +30,22 @@ export const getAllExpenses = async () => {
     console.error("Error getting all expenses ", error);
   }
 };
+
+export const getExpensesByMonthYear = async (expensesData: {
+  month: string;
+  year: string;
+}) => {
+  try {
+    const response = await axios.get(`${API_URL_EXPENSES}`, {
+      params: {
+        month: expensesData.month,
+        year: expensesData.year,
+      },
+    });
+    const res = response.data.results;
+
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
+};

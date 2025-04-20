@@ -1,12 +1,12 @@
 // components/Dashboard/DateSelectors.tsx
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useMonthStore } from "@/store/useMonthStore";
 import { useYearStore } from "@/store/useYearStore";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { getBudgetsByMonthYear } from "@/services/budgetsService";
+// import { getBudgetsByMonthYear } from "@/services/budgetsService";
 
 const DateSelectors = () => {
   const { selectedMonth, setSelectedMonth } = useMonthStore();
@@ -27,12 +27,6 @@ const DateSelectors = () => {
     { code: "12", name: "December" },
   ];
 
-  // useEffect(() => {
-  //   AsyncStorage.getItem("year-storage").then((data) =>
-  //     console.log("RAW YEAR STORAGE:", data)
-  //   );
-  // }, []);
-
   const years = [
     currentYear,
     currentYear + 1,
@@ -42,17 +36,11 @@ const DateSelectors = () => {
 
   const { selectedYear, setSelectedYear } = useYearStore();
 
-  // console.log("year type:", typeof selectedYear);
-  // console.log("month type:", typeof selectedMonth);
-
-  // console.log("selectedYear from store:", selectedYear);
-  // console.log("hydrated? ", hydrated);
-
   return (
     <View style={styles.container}>
       <View style={styles.row}>
         <View style={styles.column}>
-          <Text style={styles.label}>Month:</Text>
+          {/* <Text style={styles.label}>Month:</Text> */}
           <Picker
             selectedValue={selectedMonth}
             onValueChange={(value) => setSelectedMonth(value)}
@@ -70,7 +58,7 @@ const DateSelectors = () => {
         </View>
 
         <View style={styles.column}>
-          <Text style={styles.label}>Year:</Text>
+          {/* <Text style={styles.label}>Year:</Text> */}
           <Picker
             selectedValue={selectedYear}
             onValueChange={(itemValue) => setSelectedYear(itemValue)}

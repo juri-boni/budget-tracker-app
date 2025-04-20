@@ -23,7 +23,7 @@ export const getBudgets = async () => {
   try {
     const response = await axios.get(`${API_URL_BUDGETS}`);
     const res = response.data.results;
-    // console.log("GETTING ALL BUDGETS: ", res);
+
     return res;
   } catch (error) {
     console.error(error);
@@ -35,14 +35,14 @@ export const getBudgetsByMonthYear = async (budgetData: {
   year: string;
 }) => {
   try {
-    const response = await axios.get(`${API_URL_BUDGETS}/by-date`, {
+    const response = await axios.get(`${API_URL_BUDGETS}`, {
       params: {
         month: budgetData.month,
         year: budgetData.year,
       },
     });
     const res = response.data.results;
-    // console.log(res);
+
     return res;
   } catch (error) {
     console.error(error);

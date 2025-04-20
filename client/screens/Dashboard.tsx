@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { BudgetTable } from "../components/Dahsboard/BudgetTable";
-import DateSelectors from "@/components/Dahsboard/DateSelectors";
+import DateSelectors from "@/components/DateSelectors";
 import AddButtons from "@/components/Dahsboard/AddButtons";
 import { ExpenseModal } from "@/components/Dahsboard/Modals/ExpenseModal";
 import CategoryModal from "@/components/Dahsboard/Modals/CategoryModal";
