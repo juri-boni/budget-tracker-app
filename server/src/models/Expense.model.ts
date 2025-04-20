@@ -17,7 +17,7 @@ class Expense extends Model<
   InferCreationAttributes<Expense>
 > {
   declare id: CreationOptional<number>;
-  declare amount: number;
+  declare amount: string;
   declare date: Date;
   declare description: CreationOptional<string>;
   declare user_id: ForeignKey<User["id"]>;
@@ -28,8 +28,8 @@ class Expense extends Model<
 interface ExpenseQueryParams {
   uid?: string;
   catid?: string;
-  month?: string;
-  year?: string;
+  month?: number;
+  year?: number;
 }
 
 // Initialize the Expense model
@@ -43,6 +43,10 @@ Expense.init(
     amount: {
       type: new DataTypes.DECIMAL(10, 2),
       allowNull: false,
+      get() {
+        const rawValue = this.getDataValue('amount');
+        return parseFloat(rawValue);
+      }
     },
     date: {
       type: DataTypes.DATE,
@@ -63,7 +67,7 @@ Expense.init(
     deletedAt: {
       type: new DataTypes.DATE(),
       allowNull: true,
-    },
+    }
   },
   {
     sequelize,
@@ -87,7 +91,7 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
     const whereClause: any = {};
     if(params){
 
-      // esempio di qeury params: http://localhost:5000/v1/expenses?uid=1&catid=2&month=3&year=2025
+      // esempio di query params: http://localhost:5000/v1/expenses?uid=1&catid=2&month=3&year=2025
       const {uid, month, year, catid} = params || {};
 
       if (uid) whereClause.user_id = uid;
@@ -99,7 +103,7 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
         whereClause[Op.and].push(
           where(
             literal(`EXTRACT(MONTH FROM "date")`), //literal permette di scrivere raw SQL
-            parseInt(month)
+            month
           )
         );
       }
@@ -109,7 +113,7 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
         whereClause[Op.and].push(
           where(
             literal(`EXTRACT(YEAR FROM "date")`),
-            parseInt(year)
+            year
           )
         );
       }
@@ -124,7 +128,7 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
         "description",
         "user_id",
         "category_id",
-        [sequelize.col("Category.name"), "category_name"],
+        [sequelize.col("Category.name"), "category_name"]
       ],
       where: whereClause,
       include: [
@@ -136,12 +140,35 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
       raw: true, // Restituisce un oggetto appiattito
     });
 
-    // Return the results
-    const res: object = {
-      success: true,
-      results: results,
-    };
-    return res;
+    // Dinamically sum the expenses filtered by category
+    if(params && params.catid){
+      const summedAmount = results.reduce(
+        (accumulator, currentValue) => {
+          const amount = parseFloat(currentValue.amount);
+          return accumulator + (isNaN(amount) ? 0 : amount)
+        },
+        0,
+      );
+      
+      // Return the results
+      let res: object = {
+        success: true,
+        results: {
+          data: results,
+          amount: summedAmount
+        },
+      };
+      return res;
+    }else{
+      // Return the results
+      let res: object = {
+        success: true,
+        results: results
+      };
+      return res;
+    }
+
+    
   } catch (error: unknown) {
     if (error instanceof Error) {
       const res: object = {
