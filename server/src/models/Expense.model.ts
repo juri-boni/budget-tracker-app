@@ -30,6 +30,7 @@ interface ExpenseQueryParams {
   catid?: string;
   month?: number;
   year?: number;
+  page?: string;
 }
 
 // Initialize the Expense model
@@ -42,11 +43,7 @@ Expense.init(
     },
     amount: {
       type: new DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-      get() {
-        const rawValue = this.getDataValue('amount');
-        return parseFloat(rawValue);
-      }
+      allowNull: false
     },
     date: {
       type: DataTypes.DATE,
@@ -87,12 +84,19 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
           AND EXTRACT(YEAR FROM date) = 2025;
      */
 
-    // Clausola WHERE costruita dinamicamente in base ai query parameters ricevuti      
+    // Variabili per la gestione della paginazione
+    let page: string = '1';   
+    let limit: number = 2;
+    let offset: number = 0;
+    let totalPages: number = 1;
+
+    // Clausola WHERE costruita dinamicamente in base ai query parameters ricevuti   
     const whereClause: any = {};
+
     if(params){
 
       // esempio di query params: http://localhost:5000/v1/expenses?uid=1&catid=2&month=3&year=2025
-      const {uid, month, year, catid} = params || {};
+      const {uid, month, year, catid, page} = params || {};
 
       if (uid) whereClause.user_id = uid;
       if (catid) whereClause.category_id = catid;
@@ -118,9 +122,20 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
         );
       }
 
+      // PAGINATION
+      if(page){
+        // Count total items
+        let totalItems = await Expense.count({ where: whereClause });
+        // Count the number of pages needed based on the limit variable 
+        totalPages = Math.ceil(totalItems / limit);
+        offset = (parseInt(page) - 1) * limit;
+      }
+
     }
     // Query the database
     const results = await Expense.findAll({
+      offset, 
+      limit, 
       attributes: [
         "id",
         "amount",
@@ -136,6 +151,9 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
           model: Category,
           attributes: [],
         }
+      ],
+      order: [
+        ['date', 'DESC']
       ],
       raw: true, // Restituisce un oggetto appiattito
     });
@@ -155,7 +173,11 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
         success: true,
         results: {
           data: results,
-          amount: summedAmount
+          amount: summedAmount,
+          pagination: {
+            currentPage: parseInt(page),
+            totalPages
+          }
         },
       };
       return res;
@@ -163,7 +185,11 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
       // Return the results
       let res: object = {
         success: true,
-        results: results
+        results: results,
+        pagination: {
+          currentPage: parseInt(page),
+          totalPages
+        }
       };
       return res;
     }
