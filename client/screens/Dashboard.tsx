@@ -26,30 +26,18 @@ export const Dashboard = () => {
   const { selectedMonth, setSelectedMonth } = useMonthStore();
   const { selectedYear, setSelectedYear } = useYearStore();
 
-  // console.log(process.env.EXPO_PUBLIC_API_URL);
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isBudgetModalOpen, setIsBudgetModalOpen] = useState(false);
   const [budgets, setBudgets] = useState<BudgetsData[]>([]);
 
-  // console.log("BUDGETS IN DASHBOARD: ", budgets);
-
-  // const dataMonthYear = {
-  //   month: selectedMonth,
-  //   year: selectedYear,
-  // };
-
   useFocusEffect(
     useCallback(() => {
-      console.log("1) calling useCallback ----");
       const fetchBudgets = async () => {
-        console.log("2) calling fetchBudget ---");
-        // const result = await getBudgets();
         const result = await getBudgetsByMonthYear({
           month: selectedMonth,
           year: selectedYear,
         });
-        // console.log("FETCH BUDGETS IN DASHBOARD - ", result);
         setBudgets(result);
       };
 

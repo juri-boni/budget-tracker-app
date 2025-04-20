@@ -3,19 +3,6 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TableRow } from "./TableRow";
 
-// type CategoryData = {
-//   id: string;
-//   category: string;
-//   budget: number;
-//   spent: number;
-//   residual: number;
-// };
-
-// type BudgetTableProps = {
-//   categories: CategoryData[];
-//   total: { budget: number; spent: number; residual: number };
-// };
-
 type BudgetsData = {
   id: number;
   amount: number;
@@ -30,12 +17,20 @@ type BudgetTableProps = {
 };
 
 export const BudgetTable: React.FC<BudgetTableProps> = ({ budgets }) => {
+  const amounts = budgets
+    .sort((a, b) => a.id - b.id) // o ordina per month/year se preferisci
+    .map((budget) => Number(budget.amount));
+
+  const total = amounts.reduce((x, y) => {
+    return x + y;
+  }, 0);
+  // console.log(total);
+
+  // console.log(amounts);
   return (
     <View style={styles.table}>
       <View style={styles.row}>
         <Text style={styles.cell}>Caetgory</Text>
-        {/* <Text style={styles.cell}>DESCRIPTION</Text> */}
-        {/* <Text style={styles.cell}>mm/yyyy</Text> */}
         <Text style={styles.cell}>Amount</Text>
         <Text style={styles.cell}>Spent</Text>
         <Text style={styles.cell}>Residual</Text>
@@ -50,12 +45,12 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ budgets }) => {
             category={budget.category_name}
           />
         ))}
-      {/* <View style={styles.footer}>
+      <View style={styles.footer}>
         <Text style={styles.cell}>Total</Text>
-        <Text style={styles.cell}>{total.budget}</Text>
-        <Text style={styles.cell}>{total.spent}</Text>
-        <Text style={styles.cell}>{total.residual}</Text>
-      </View> */}
+        <Text style={styles.cell}>{total}</Text>
+        <Text style={styles.cell}>calc</Text>
+        <Text style={styles.cell}>calc</Text>
+      </View>
     </View>
   );
 };

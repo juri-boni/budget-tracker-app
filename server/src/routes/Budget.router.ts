@@ -51,6 +51,8 @@ import {
  */
 BudgetRouter.get("/", httpGetBudgetList);
 
+BudgetRouter.get("/by-date", httpGetBudgetByMonthYear);
+
 /**
  * @swagger
  * /budget/{id}:
@@ -87,9 +89,8 @@ BudgetRouter.get("/", httpGetBudgetList);
  *       500:
  *         description: Server error
  */
-BudgetRouter.get("/:id", httpGetBudget);
 
-BudgetRouter.get("/by-date", httpGetBudgetByMonthYear);
+BudgetRouter.get("/:id", httpGetBudget);
 
 /**
  * @swagger
