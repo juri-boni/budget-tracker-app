@@ -10,13 +10,16 @@ import sequelize from "../config/dbConfig";
 import User from "./User.model";
 import Category from "./Category.model";
 
+import { buildBudgetWhereClause } from '../utils/filters';
+import { calcExpensesPerCategory } from "../services/ExpenseService";
+
 // Define the Budget model class
 class Budget extends Model<
   InferAttributes<Budget>,
   InferCreationAttributes<Budget>
 > {
   declare id: CreationOptional<number>;
-  declare amount: number;
+  declare amount: string;
   declare month: number;
   declare year: number;
   declare user_id: ForeignKey<User["id"]>;
@@ -72,12 +75,8 @@ interface BudgetQueryParams {
 async function getAllBudget(params: BudgetQueryParams): Promise<object> {
   try {
 
-    const whereClause: any = {};
-    if(params){
-      const {month, year} = params || {};
-      if(month) whereClause.month = month;
-      if(year) whereClause.year = year;
-    }
+    const whereClause = buildBudgetWhereClause(params);
+   
 
     const budgetList = await Budget.findAll({
       attributes: [
@@ -87,7 +86,7 @@ async function getAllBudget(params: BudgetQueryParams): Promise<object> {
         "year",
         "user_id",
         "category_id",
-        [sequelize.col("Category.name"), "category_name"],
+        [sequelize.col("Category.name"), "category_name"]
       ],
       where: whereClause,
       include: [
@@ -98,12 +97,45 @@ async function getAllBudget(params: BudgetQueryParams): Promise<object> {
       ],
       raw: true, // Restituisce un oggetto appiattito
     });
+
+    
+    if(params && budgetList.length){
+
+      const {month, year} = params || {};
+      const filters = {
+        month: month || null,
+        year: year || null,
+      }
+
+      // Estraggo e restituisco la somma delle spese totali per la Categoria filtrate per mese ed anno
+      const summedAmount= await calcExpensesPerCategory(filters) as any[];
+      if(summedAmount != undefined){
+        
+        // Aggiungo la somma come parametro a ciascun budget
+        const budgetsWithTotals = budgetList.map(budget => {
+          const sum = summedAmount.find(s => s.category_id === budget.category_id);
+          return {
+            ...budget,
+            category_amount_spent: sum ? sum.total_amount : 0 
+          };
+        });
+
+        // Return the results
+        const res: object = {
+          success: true,
+          results: budgetsWithTotals,
+        };
+        return res;
+      }
+    }
+    
     // Return the results
     const res: object = {
       success: true,
       results: budgetList,
     };
     return res;
+
   } catch (error: unknown) {
     // throw new Error('Error querying the database: TABLE Categories');
     if (error instanceof Error) {
