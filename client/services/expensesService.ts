@@ -31,19 +31,29 @@ export const getAllExpenses = async () => {
   }
 };
 
-export const getExpensesByMonthYear = async (expensesData: {
+export const getExpensesByMonthYear = async ({
+  month,
+  year,
+  page,
+  uid = "1", // opzionale, se serve
+}: {
   month: string;
   year: string;
+  page: number;
+  uid?: string;
 }) => {
   try {
     const response = await axios.get(`${API_URL_EXPENSES}`, {
       params: {
-        month: expensesData.month,
-        year: expensesData.year,
+        uid,
+        month,
+        year,
+        page,
       },
     });
-    const res = response.data.results;
 
+    const res = response.data.results;
+    console.log(res);
     return res;
   } catch (error) {
     console.error(error);

@@ -5,7 +5,9 @@ import {
   DataTypes,
   ForeignKey,
   CreationOptional,
-  Op, literal, where
+  Op,
+  literal,
+  where,
 } from "sequelize";
 import sequelize from "../config/dbConfig";
 import User from "./User.model";
@@ -43,7 +45,7 @@ Expense.init(
     },
     amount: {
       type: new DataTypes.DECIMAL(10, 2),
-      allowNull: false
+      allowNull: false,
     },
     date: {
       type: DataTypes.DATE,
@@ -64,7 +66,7 @@ Expense.init(
     deletedAt: {
       type: new DataTypes.DATE(),
       allowNull: true,
-    }
+    },
   },
   {
     sequelize,
@@ -75,7 +77,6 @@ Expense.init(
 
 async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
   try {
-
     /**
      *  SELECT id FROM expenses
         WHERE user_id = 4
@@ -85,18 +86,17 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
      */
 
     // Variabili per la gestione della paginazione
-    let page: string = '1';   
-    let limit: number = 2;
+    let page: string = "1";
+    let limit: number = 10;
     let offset: number = 0;
     let totalPages: number = 1;
 
-    // Clausola WHERE costruita dinamicamente in base ai query parameters ricevuti   
+    // Clausola WHERE costruita dinamicamente in base ai query parameters ricevuti
     const whereClause: any = {};
 
-    if(params){
-
+    if (params) {
       // esempio di query params: http://localhost:5000/v1/expenses?uid=1&catid=2&month=3&year=2025
-      const {uid, month, year, catid, page} = params || {};
+      const { uid, month, year, catid, page } = params || {};
 
       if (uid) whereClause.user_id = uid;
       if (catid) whereClause.category_id = catid;
@@ -115,27 +115,23 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
       if (year) {
         whereClause[Op.and] = whereClause[Op.and] || [];
         whereClause[Op.and].push(
-          where(
-            literal(`EXTRACT(YEAR FROM "date")`),
-            year
-          )
+          where(literal(`EXTRACT(YEAR FROM "date")`), year)
         );
       }
 
       // PAGINATION
-      if(page){
+      if (page) {
         // Count total items
         let totalItems = await Expense.count({ where: whereClause });
-        // Count the number of pages needed based on the limit variable 
+        // Count the number of pages needed based on the limit variable
         totalPages = Math.ceil(totalItems / limit);
         offset = (parseInt(page) - 1) * limit;
       }
-
     }
     // Query the database
     const results = await Expense.findAll({
-      offset, 
-      limit, 
+      offset,
+      limit,
       attributes: [
         "id",
         "amount",
@@ -143,31 +139,26 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
         "description",
         "user_id",
         "category_id",
-        [sequelize.col("Category.name"), "category_name"]
+        [sequelize.col("Category.name"), "category_name"],
       ],
       where: whereClause,
       include: [
         {
           model: Category,
           attributes: [],
-        }
+        },
       ],
-      order: [
-        ['date', 'DESC']
-      ],
+      order: [["date", "DESC"]],
       raw: true, // Restituisce un oggetto appiattito
     });
 
     // Dinamically sum the expenses filtered by category
-    if(params && params.catid){
-      const summedAmount = results.reduce(
-        (accumulator, currentValue) => {
-          const amount = parseFloat(currentValue.amount);
-          return accumulator + (isNaN(amount) ? 0 : amount)
-        },
-        0,
-      );
-      
+    if (params && params.catid) {
+      const summedAmount = results.reduce((accumulator, currentValue) => {
+        const amount = parseFloat(currentValue.amount);
+        return accumulator + (isNaN(amount) ? 0 : amount);
+      }, 0);
+
       // Return the results
       let res: object = {
         success: true,
@@ -176,25 +167,23 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
           amount: summedAmount,
           pagination: {
             currentPage: parseInt(page),
-            totalPages
-          }
+            totalPages,
+          },
         },
       };
       return res;
-    }else{
+    } else {
       // Return the results
       let res: object = {
         success: true,
         results: results,
         pagination: {
           currentPage: parseInt(page),
-          totalPages
-        }
+          totalPages,
+        },
       };
       return res;
     }
-
-    
   } catch (error: unknown) {
     if (error instanceof Error) {
       const res: object = {
