@@ -3,6 +3,8 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TableRow } from "./TableRow";
 
+import { deleteBudget } from "@/services/budgetsService";
+
 type BudgetsData = {
   id: number;
   amount: number;
@@ -24,16 +26,23 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ budgets }) => {
   const total = amounts.reduce((x, y) => {
     return x + y;
   }, 0);
+
+  const handleDelete = async (id: number) => {
+    console.log("DELETING BUDGET: ", id);
+    const res = await deleteBudget(id);
+    console.log(res);
+  };
   // console.log(total);
 
   // console.log(amounts);
   return (
     <View style={styles.table}>
       <View style={styles.row}>
-        <Text style={styles.cell}>Caetgory</Text>
+        <Text style={styles.cell}>Category</Text>
         <Text style={styles.cell}>Amount</Text>
         <Text style={styles.cell}>Spent</Text>
         <Text style={styles.cell}>Residual</Text>
+        <Text style={styles.cell}>del</Text>
       </View>
       {budgets &&
         budgets.map((budget) => (
@@ -43,6 +52,7 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ budgets }) => {
             month={budget.month}
             year={budget.year}
             category={budget.category_name}
+            onDelete={() => handleDelete(budget.id)}
           />
         ))}
       <View style={styles.footer}>

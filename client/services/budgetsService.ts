@@ -48,3 +48,19 @@ export const getBudgetsByMonthYear = async (budgetData: {
     console.error(error);
   }
 };
+
+export const deleteBudget = async (id: number) => {
+  try {
+    const response = await axios.delete(
+      `${API_URL_BUDGETS}/${id}`
+      // , {
+      // headers: { Authorization: `Bearer ${token}` },
+      // }
+    );
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting budget:", error);
+    throw error;
+  }
+};

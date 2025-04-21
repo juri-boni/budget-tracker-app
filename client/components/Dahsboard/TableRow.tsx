@@ -1,12 +1,14 @@
 // components/Dashboard/TableRow.tsx
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 type TableRowProps = {
   amount: number;
   month: number;
   year: number;
   category: string;
+  onDelete: () => void;
 };
 
 export const TableRow: React.FC<TableRowProps> = ({
@@ -14,6 +16,7 @@ export const TableRow: React.FC<TableRowProps> = ({
   month,
   year,
   category,
+  onDelete,
 }) => {
   return (
     <View style={styles.row}>
@@ -25,6 +28,9 @@ export const TableRow: React.FC<TableRowProps> = ({
       <Text style={styles.cell}>{amount}</Text>
       <Text style={styles.cell}>calc</Text>
       <Text style={styles.cell}>calc</Text>
+      <TouchableOpacity onPress={onDelete} style={styles.cell}>
+        <Ionicons name="trash-outline" size={15} color="red" />
+      </TouchableOpacity>
     </View>
   );
 };
