@@ -152,38 +152,17 @@ async function getAllExpenses(params: ExpenseQueryParams): Promise<object> {
       raw: true, // Restituisce un oggetto appiattito
     });
 
-    // Dinamically sum the expenses filtered by category
-    if (params && params.catid) {
-      const summedAmount = results.reduce((accumulator, currentValue) => {
-        const amount = parseFloat(currentValue.amount);
-        return accumulator + (isNaN(amount) ? 0 : amount);
-      }, 0);
+    // Return the results
+    let res: object = {
+      success: true,
+      results: results,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages
+      }
+    };
+    return res;
 
-      // Return the results
-      let res: object = {
-        success: true,
-        results: {
-          data: results,
-          amount: summedAmount,
-          pagination: {
-            currentPage: parseInt(page),
-            totalPages,
-          },
-        },
-      };
-      return res;
-    } else {
-      // Return the results
-      let res: object = {
-        success: true,
-        results: results,
-        pagination: {
-          currentPage: parseInt(page),
-          totalPages,
-        },
-      };
-      return res;
-    }
   } catch (error: unknown) {
     if (error instanceof Error) {
       const res: object = {
@@ -293,6 +272,7 @@ async function deleteExpense(id: number): Promise<object | undefined> {
     return { error };
   }
 }
+
 
 // Exporting the function as a named export
 export default Expense;
