@@ -42,6 +42,7 @@ export const getBudgetsByMonthYear = async (budgetData: {
       },
     });
     const res = response.data.results;
+    console.log(typeof res[0].category_amount_spent);
 
     return res;
   } catch (error) {

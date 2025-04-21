@@ -12,6 +12,7 @@ type BudgetsData = {
   year: number;
   user_id: number;
   category_name: string;
+  category_amount_spent: string;
 };
 
 type BudgetTableProps = {
@@ -20,10 +21,18 @@ type BudgetTableProps = {
 
 export const BudgetTable: React.FC<BudgetTableProps> = ({ budgets }) => {
   const amounts = budgets
-    .sort((a, b) => a.id - b.id) // o ordina per month/year se preferisci
+    .sort((a, b) => a.id - b.id)
     .map((budget) => Number(budget.amount));
 
-  const total = amounts.reduce((x, y) => {
+  const totalAmount = amounts.reduce((x, y) => {
+    return x + y;
+  }, 0);
+
+  const spents = budgets
+    .sort((a, b) => a.id - b.id)
+    .map((budget) => Number(budget.category_amount_spent));
+
+  const totalSpent = spents.reduce((x, y) => {
     return x + y;
   }, 0);
 
@@ -32,17 +41,15 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ budgets }) => {
     const res = await deleteBudget(id);
     console.log(res);
   };
-  // console.log(total);
 
-  // console.log(amounts);
   return (
     <View style={styles.table}>
       <View style={styles.row}>
-        <Text style={styles.cell}>Category</Text>
+        <Text style={styles.categoryCell}>Category</Text>
         <Text style={styles.cell}>Amount</Text>
         <Text style={styles.cell}>Spent</Text>
         <Text style={styles.cell}>Residual</Text>
-        <Text style={styles.cell}>del</Text>
+        <Text style={styles.delete}>del</Text>
       </View>
       {budgets &&
         budgets.map((budget) => (
@@ -52,14 +59,17 @@ export const BudgetTable: React.FC<BudgetTableProps> = ({ budgets }) => {
             month={budget.month}
             year={budget.year}
             category={budget.category_name}
+            spent={budget.category_amount_spent}
             onDelete={() => handleDelete(budget.id)}
           />
         ))}
       <View style={styles.footer}>
         <Text style={styles.cell}>Total</Text>
-        <Text style={styles.cell}>{total}</Text>
-        <Text style={styles.cell}>calc</Text>
-        <Text style={styles.cell}>calc</Text>
+        <Text style={styles.cell}>{totalAmount}</Text>
+        <Text style={styles.cell}>{totalSpent}</Text>
+        <Text style={styles.cell}>
+          {(Number(totalAmount) - Number(totalSpent)).toFixed(2)}
+        </Text>
       </View>
     </View>
   );
@@ -91,6 +101,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#f2f2f2",
     borderTopWidth: 1,
     borderTopColor: "#ccc",
+  },
+  categoryCell: {
+    flex: 1.2,
+    fontWeight: "bold",
+    textAlign: "center",
+    paddingHorizontal: 12,
+  },
+  delete: {
+    flex: 0.5,
+    textAlign: "center",
+    paddingHorizontal: 10,
   },
 });
 
