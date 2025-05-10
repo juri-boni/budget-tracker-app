@@ -1,14 +1,26 @@
-import express, { NextFunction, Request, Response } from "express";
+require("dotenv").config(); //va importato all'inizio
+import express from "express";
+import api from "./routes/api";
+import cors from "cors";
+import "./models/associations";
+
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerOptions from './swagger/swaggerOptions';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
+// Abilita CORS per tutte le richieste
+app.use(cors());
+
+// Parse any incoming JSON
 app.use(express.json());
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Server is running!");
-});
+// Setup Swagger
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Versioning delle APIs
+app.use("/v1", api);
+
+export default app;
